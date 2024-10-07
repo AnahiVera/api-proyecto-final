@@ -41,23 +41,28 @@ def login():
 @bp_auth.route('/register', methods=['POST'])
 def register():
 
+    username = request.json.get('username')
     email = request.json.get('email')
     password = request.json.get('password')
 
+    if not username:
+        return jsonify({"status": "error", "message": "Username is required"}), 422
+    
     if not email:
         return jsonify({"status": "error", "message": "Email is required"}), 422
     
     if not password:
         return jsonify({"status": "error", "message": "Password is required"}), 422
 
-    found = User.query.filter_by(email=email).first()
+    found = User.query.filter_by(username=username).first()
 
     if found:
-        return jsonify({"status": "error", "message": "Email is already in use!"}), 422
+        return jsonify({"status": "error", "message": "Username is already in use!"}), 422
     
     profile = Profile()
     user = User()
 
+    user.username = username
     user.email = email
     user.password = generate_password_hash(password)
     user.profile = profile

@@ -44,6 +44,7 @@ class Profile(db.Model):
     github = db.Column(db.String, default="")
     linkedin = db.Column(db.String, default="")
     avatar = db.Column(db.String, default="")
+    public_id = db.Column(db.String, default="")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def serialize(self):
@@ -75,8 +76,8 @@ class JobPosting(db.Model):
     description = db.Column(db.String, nullable=False)
     payment = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
-    required_time = db.Column(db.DateTime, nullable=False)
-    expiration_date = db.Column(db.DateTime, nullable=False)
+    required_time = db.Column(db.Integer, nullable=False)
+    expiration_date = db.Column(db.DateTime, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     applications = db.relationship('Application', backref='job_posting', lazy=True)
@@ -109,7 +110,6 @@ class JobPosting(db.Model):
 
 class PostLanguage(db.Model):
     __tablename__ = 'post_languages'
-    id = db.Column(db.Integer, primary_key=True)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
     language_id = db.Column(db.Integer, db.ForeignKey('languages.id'), nullable=False)
 
@@ -119,13 +119,12 @@ class PostLanguage(db.Model):
     def serialize(self):
         return {
             "job_posting_id": self.job_posting_id,
-            "language": self.language.name
+            "language": self.language_id
         }
 
 
 class TechKnowledge(db.Model):
     __tablename__ = 'tech_knowledges'
-    id = db.Column(db.Integer, primary_key=True)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
     rank_id = db.Column(db.Integer, db.ForeignKey('ranks.id'), nullable=False)
 
@@ -135,7 +134,7 @@ class TechKnowledge(db.Model):
     def serialize(self):
         return {
             "job_posting_id": self.job_posting_id,
-            "rank": self.rank.name
+            "rank": self.rank_id
         }
 
 
