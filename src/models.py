@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
@@ -6,19 +6,24 @@ db = SQLAlchemy()
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
     is_active = db.Column(db.Boolean, default=True)
+    
     profile = db.relationship('Profile', backref="user", uselist=False)
+    job_postings = db.relationship('JobPosting', backref="employer", lazy=True)
+    applications = db.relationship('Application', backref="applicant", lazy=True)
 
     def serialize(self):
         return {
             "id": self.id,
+            "username": self.username,
             "email": self.email,
             "is_active": self.is_active,
-            "profile": self.profile.serialize()
+            "profile": self.profile.serialize() if self.profile else None
         }
-    
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -29,6 +34,7 @@ class User(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
 
 
 class Profile(db.Model):
@@ -38,7 +44,7 @@ class Profile(db.Model):
     github = db.Column(db.String, default="")
     linkedin = db.Column(db.String, default="")
     avatar = db.Column(db.String, default="")
-    users_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def serialize(self):
         return {
@@ -48,7 +54,7 @@ class Profile(db.Model):
             "linkedin": self.linkedin,
             "avatar": self.avatar
         }
-    
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -60,24 +66,33 @@ class Profile(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+
+
 class JobPosting(db.Model):
     __tablename__ = 'job_postings'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
-    location = db.Column(db.String, nullable=False)
-    salary = db.Column(db.Float, nullable=True)
-    employer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  
-    applications = db.relationship('Application', backref='job', lazy=True)  
+    payment = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.now)
+    required_time = db.Column(db.DateTime, nullable=False)
+    expiration_date = db.Column(db.DateTime, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    applications = db.relationship('Application', backref='job_posting', lazy=True)
+    languages = db.relationship('PostLanguage', backref='job_posting', lazy=True)  
+    tech_knowledges = db.relationship('TechKnowledge', backref='job_posting', lazy=True)  
 
     def serialize(self):
         return {
             "id": self.id,
             "title": self.title,
             "description": self.description,
-            "location": self.location,
-            "salary": self.salary,
-            "employer": self.employer_id
+            "payment": self.payment,
+            "employer": self.user_id,
+            "date": self.date,
+            "required_time": self.required_time,
+            "expiration_date": self.expiration_date
         }
 
     def save(self):
@@ -92,22 +107,77 @@ class JobPosting(db.Model):
         db.session.commit()
 
 
-class Application(db.Model):
-    __tablename__ = 'applications'
+class PostLanguage(db.Model):
+    __tablename__ = 'post_languages'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
-    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False) 
-    
-    status = db.Column(db.String, default="pending")  
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+    language_id = db.Column(db.Integer, db.ForeignKey('languages.id'), nullable=False)
+
+
+    language = db.relationship('Language', backref='post_languages')
+
+    def serialize(self):
+        return {
+            "job_posting_id": self.job_posting_id,
+            "language": self.language.name
+        }
+
+
+class TechKnowledge(db.Model):
+    __tablename__ = 'tech_knowledges'
+    id = db.Column(db.Integer, primary_key=True)
+    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+    rank_id = db.Column(db.Integer, db.ForeignKey('ranks.id'), nullable=False)
+
+   
+    rank = db.relationship('Rank', backref='tech_knowledges')
+
+    def serialize(self):
+        return {
+            "job_posting_id": self.job_posting_id,
+            "rank": self.rank.name
+        }
+
+
+class Rank(db.Model):
+    __tablename__ = 'ranks'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
 
     def serialize(self):
         return {
             "id": self.id,
-            "user": self.applicant.email,  
-            "job": self.job.title,  
-            "status": self.status
-            "date": self.date.strftime("%d-%m-%Y")
+            "name": self.name
+        }
+
+
+
+class Language(db.Model):
+    __tablename__ = 'languages'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+
+
+
+class Application(db.Model):
+    __tablename__ = 'applications'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+    date = db.Column(db.DateTime, default=datetime.now)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user": self.user_id,
+            "job": self.job_posting_id,
+            "date": self.date
         }
 
     def save(self):
