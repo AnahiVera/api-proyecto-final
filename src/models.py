@@ -1,3 +1,4 @@
+import datetime
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
@@ -37,7 +38,6 @@ class Profile(db.Model):
     github = db.Column(db.String, default="")
     linkedin = db.Column(db.String, default="")
     avatar = db.Column(db.String, default="")
-    public_id = db.Column(db.String, default="")
     users_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def serialize(self):
