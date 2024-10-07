@@ -110,8 +110,9 @@ class JobPosting(db.Model):
 
 class PostLanguage(db.Model):
     __tablename__ = 'post_languages'
-    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
-    language_id = db.Column(db.Integer, db.ForeignKey('languages.id'), nullable=False)
+
+    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False, primary_key=True)
+    language_id = db.Column(db.Integer, db.ForeignKey('languages.id'), nullable=False, primary_key=True)
 
 
     language = db.relationship('Language', backref='post_languages')
@@ -125,16 +126,34 @@ class PostLanguage(db.Model):
 
 class TechKnowledge(db.Model):
     __tablename__ = 'tech_knowledges'
+    id = db.Column(db.Integer, primary_key=True)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
     rank_id = db.Column(db.Integer, db.ForeignKey('ranks.id'), nullable=False)
+    technologies_id = db.Column(db.Integer, db.ForeignKey('technologies.id'), nullable=False)
 
-   
+
+    Technologies = db.relationship('Technologies', backref='tech_knowledges')
     rank = db.relationship('Rank', backref='tech_knowledges')
 
     def serialize(self):
         return {
+            "id": self.id,
             "job_posting_id": self.job_posting_id,
-            "rank": self.rank_id
+            "rank": self.rank_id,
+            "technologies": self.technologies_id
+        }
+
+
+class Status(db.Model):
+    __tablename__ = 'status'
+    id =  db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name
         }
 
 
@@ -163,19 +182,33 @@ class Language(db.Model):
         }
 
 
+class Technologies(db.Model):
+    __tablename__ = 'technologies'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
 
 class Application(db.Model):
     __tablename__ = 'applications'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
+
+
 
     def serialize(self):
         return {
             "id": self.id,
             "user": self.user_id,
             "job": self.job_posting_id,
+            "status": self.status_id,
             "date": self.date
         }
 
