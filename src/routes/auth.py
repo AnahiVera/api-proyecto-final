@@ -20,13 +20,13 @@ def login():
     found = User.query.filter_by(email=email).first()
 
     if not found:
-        return jsonify({"status": "error", "message": "email/password are incorrects"}), 401
+        return jsonify({"status": "error", "message": "email/password are incorrect"}), 401
     
     if not check_password_hash(found.password, password):
-        return jsonify({"status": "error", "message": "email/password are incorrects"}), 401
+        return jsonify({"status": "error", "message": "email/password are incorrect"}), 401
 
     if found:
-        expire = datetime.timedelta(days=3)
+        expire = datetime.timedelta(days=5)
         access_token = create_access_token(identity=found.id, expires_delta=expire)
 
         data = {
@@ -69,7 +69,7 @@ def register():
     user.save()
 
     if user:
-        expire = datetime.timedelta(days=3)
+        expire = datetime.timedelta(days=5)
         access_token = create_access_token(identity=user.id, expires_delta=expire)
 
         data = {
