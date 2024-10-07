@@ -1,8 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-<<<<<<< HEAD
-
-db= SQLAlchemy()
-=======
 db = SQLAlchemy()
 
 
@@ -100,9 +96,10 @@ class Application(db.Model):
     __tablename__ = 'applications'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
-    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)  
-
+    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False) 
+    
     status = db.Column(db.String, default="pending")  
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
     def serialize(self):
         return {
@@ -110,6 +107,7 @@ class Application(db.Model):
             "user": self.applicant.email,  
             "job": self.job.title,  
             "status": self.status
+            "date": self.date.strftime("%d-%m-%Y")
         }
 
     def save(self):
@@ -122,4 +120,3 @@ class Application(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
->>>>>>> 103804402d0a38b7b438d28df1f4e33ff2498901
