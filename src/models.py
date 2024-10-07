@@ -81,7 +81,7 @@ class JobPosting(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     applications = db.relationship('Application', backref='job_posting', lazy=True)
-    languages = db.relationship('PostLanguage', backref='job_posting', lazy=True)  
+    post_languages = db.relationship('PostLanguage', backref='job_posting', lazy=True)  
     tech_knowledges = db.relationship('TechKnowledge', backref='job_posting', lazy=True)  
 
     def serialize(self):
@@ -201,7 +201,7 @@ class Application(db.Model):
     status_id = db.Column(db.Integer, db.ForeignKey('status.id'), nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
 
-
+    status = db.relationship('Status', backref='applications')
 
     def serialize(self):
         return {
