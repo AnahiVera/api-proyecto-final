@@ -5,12 +5,15 @@ from models import User, Profile
 
 bp_profile = Blueprint('bp_profile', __name__)
 
+
 @bp_profile.route('/profile', methods=['GET'])
 @jwt_required()
 def profile():
     id = get_jwt_identity()
     user = User.query.get(id)
     return jsonify({"status": "success", "message": "Profile loaded",  "user": user.serialize()})
+
+
 
 @bp_profile.route('/profile', methods=['PATCH'])
 @jwt_required()
@@ -39,3 +42,24 @@ def update_profile():
     user.update()
 
     return jsonify({"status": "success", "message": "Profile updated!", "user": user.serialize() }), 200
+
+
+
+
+
+@bp_profile.route('/profile', methods=['DELETE'])
+@jwt_required()
+def delete_profile():
+    id = get_jwt_identity()  
+    user = User.query.get(id)
+    
+    if not user or not user.profile:
+        return jsonify({"status": "error", "message": "Profile not found"}), 404
+
+    if user.profile.public_id:
+        cloudinary.uploader.destroy(user.profile.public_id)
+
+ 
+    user.profile.delete()
+
+    return jsonify({"status": "success", "message": "Profile deleted!"}), 200

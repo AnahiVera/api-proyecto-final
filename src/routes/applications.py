@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import Application
+from models import Application, JobPosting
 
 
 bp_application = Blueprint('bp_application', __name__)
@@ -33,8 +33,8 @@ def apply_job():
         job_posting_id=job_id,
         status_id = 1
     )
-    application.save()
-    return jsonify({"status": "success", "You have applied": application.serialize()}), 201
+    Application.save()
+    return jsonify({"status": "success", "You have applied": Application.serialize()}), 201
 
 
 @bp_application.route('/applications/<int:application_id>', methods=['GET']) # obtener applicacion en espeficifo get (id)
