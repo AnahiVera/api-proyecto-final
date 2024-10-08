@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from models import Status
 
 bp_status = Blueprint('bp_status', __name__)
 
