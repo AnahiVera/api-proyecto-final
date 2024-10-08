@@ -18,7 +18,7 @@ def get_applications():
 
 @bp_application.route('/applications', methods=['POST']) #aplicar a publicacion de trabajo
 @jwt_required()
-def apply_job()
+def apply_job():
     user_id = get_jwt_identity()
     data = request.json
     job_id = data.get('job_posting_id')
@@ -39,7 +39,7 @@ def apply_job()
 
 @bp_application.route('/applications/<int:application_id>', methods=['GET']) # obtener applicacion en espeficifo get (id)
 @jwt_required()
-def get_application(application_id)
+def get_application(application_id):
     user_id = get_jwt_identity()
     application = Application.query.get_or_404(application_id)
 
@@ -51,7 +51,7 @@ def get_application(application_id)
 
 @bp_application.route('/applications/<int:application_id>', methods=['PATCH']) #el empleador debe poder actualizar el status (aceptar o rechazar, pendiente?) Patch (id) 
 @jwt_required()
-def update_application(application_id)
+def update_application(application_id):
 
     user_id = get_jwt_identity()
     application = Application.query.get_or_404(application_id)
@@ -70,7 +70,7 @@ def update_application(application_id)
 
 @bp_application.route('/applications/<int:application_id>', methods=['DELETE']) #el aplicante puede eliminar su aplicacion  delete 
 @jwt_required()
-def update_application(application_id)
+def delete_application(application_id):
     user_id = get_jwt_identity()
     application = Application.query.get_or_404(application_id)
 
