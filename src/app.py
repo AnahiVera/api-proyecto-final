@@ -31,7 +31,12 @@ CORS(app)
 
 app.register_blueprint(bp_auth, url_prefix="/api")
 app.register_blueprint(bp_profile, url_prefix="/api")
-
+app.register_blueprint(bp_application, url_prefix="/api" )
+app.register_blueprint(bp_languages, url_prefix="/api" )
+app.register_blueprint(bp_ranks, url_prefix="/api" )
+app.register_blueprint(bp_status, url_prefix="/api" )
+app.register_blueprint(bp_technologies, url_prefix="/api" )
+app.register_blueprint(bp_job_posting, url_prefix="/api" )
 
 
 @app.route('/')
