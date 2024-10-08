@@ -28,12 +28,13 @@ def apply_job():
     if already_applied:
         return jsonify({"status": "error", "message": "You have already applied to this offer"}), 400
     
-    new_application = Application (
+    application  = Application (
         user_id=user_id,
         job_posting_id=job_id,
         status_id = 1
+        
     )
-    Application.save()
+    application.save()
     return jsonify({"status": "success", "You have applied": Application.serialize()}), 201
 
 
