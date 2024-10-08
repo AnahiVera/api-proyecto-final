@@ -155,7 +155,7 @@ class RankingJobPosting(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     ranking = db.Column(db.Integer, nullable=False)
-    jobPosting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
+    jobPosting_id = db.Column(db.Integer, db.ForeignKey('jobpostings.id'), nullable=False)
 
 
 
@@ -175,7 +175,7 @@ class RankingApplications(db.Model):
     ranking = db.Column(db.Integer, nullable=False)
     application_id = db.Column(db.Integer, db.ForeignKey('applications.id'), nullable=False)
 
-    Application = db.relationship('Applications', backref='RankingApplication')
+    Application = db.relationship('Application', backref='RankingApplication')
 
 
     def serialize(self):
@@ -183,7 +183,7 @@ class RankingApplications(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "ranking": self.ranking,
-            "jobPosting_id": self.application_id
+            "application_id": self.application_id
         }
 
 
