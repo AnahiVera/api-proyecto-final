@@ -84,6 +84,7 @@ class JobPosting(db.Model):
     required_time = db.Column(db.Integer, nullable=False)
     expiration_date = db.Column(db.DateTime, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
     
     applications = db.relationship('Application', backref='job_posting', lazy=True)
     post_languages = db.relationship('PostLanguage', backref='job_posting', lazy=True)  
@@ -157,7 +158,7 @@ class RankingJobPosting(db.Model):
     ranking = db.Column(db.Integer, nullable=False)
     jobPosting_id = db.Column(db.Integer, db.ForeignKey('jobpostings.id'), nullable=False)
 
-
+    job_postings = db.relationship('JobPosting', backref='RankingJobPosting')
 
     def serialize(self):
         return {
