@@ -13,6 +13,7 @@ from routes.languages import bp_languages
 from routes.ranks import bp_ranks
 from routes.status import bp_status
 from routes.technologies import bp_technologies
+from routes.job_postings import bp_job_posting
 
 load_dotenv()
 
