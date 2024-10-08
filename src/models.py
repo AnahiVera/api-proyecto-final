@@ -86,10 +86,10 @@ class JobPosting(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     
-    applications = db.relationship('Application', backref='job_posting', lazy=True)
-    post_languages = db.relationship('PostLanguage', backref='job_posting', lazy=True)  
-    tech_knowledges = db.relationship('TechKnowledge', backref='job_posting', lazy=True)  
-    RankingJobPosting = db.relationship('RankingJobPosting', backref="job_posting", lazy=True)
+    applications = db.relationship('Application', backref='job_postings', lazy=True)
+    post_languages = db.relationship('PostLanguage', backref='job_postings', lazy=True)  
+    tech_knowledges = db.relationship('TechKnowledge', backref='job_postings', lazy=True)  
+    
 
     def serialize(self):
         return {
@@ -158,7 +158,7 @@ class RankingJobPosting(db.Model):
     ranking = db.Column(db.Integer, nullable=False)
     jobPosting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
 
-    job_postings = db.relationship('JobPosting', backref='RankingJobPosting')
+    job_postings = db.relationship('job_postings', backref='RankingJobPosting')
 
     def serialize(self):
         return {
