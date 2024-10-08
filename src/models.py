@@ -84,7 +84,7 @@ class JobPosting(db.Model):
     required_time = db.Column(db.Integer, nullable=False)
     expiration_date = db.Column(db.DateTime, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
+    rankingJobPosting_id = db.Column(db.Integer, db.ForeignKey('RankingJobPosting.id'), nullable=False) 
     
     applications = db.relationship('Application', backref='job_postings', lazy=True)
     post_languages = db.relationship('PostLanguage', backref='job_postings', lazy=True)  
