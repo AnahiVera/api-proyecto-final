@@ -43,6 +43,39 @@ def get_application(application_id)
     user_id = get_jwt_identity()
     application = Application.query.get_or_404(application_id)
 
+    if application.user_id != user_id and application.job_posting.user_id != user_id:
+        return jsonify({"status": "error", "message": "Not authorized"}), 403
+    
+    return jsonify({"status": "success", "application": application.serialize()}), 200
 
-# el empleador debe poder actualizar el status (aceptar o rechazar, pendiente?) Patch (id) 
-#el aplicante puede eliminar su aplicacion  delete
+
+@bp_application.route('/applications/<int:application_id>', methods=['PATCH']) #el empleador debe poder actualizar el status (aceptar o rechazar, pendiente?) Patch (id) 
+@jwt_required()
+def update_application(application_id)
+
+    user_id = get_jwt_identity()
+    application = Application.query.get_or_404(application_id)
+    
+    # Solo el empleador de la publicación puede actualizar el estado
+    if application.job_posting.user_id != user_id:
+        return jsonify({"status": "error", "message": "Not authorized"}), 403
+    
+    data = request.json
+    if 'status_id' in data:
+        application.status_id = data['status_id']
+    
+    application.update()
+    return jsonify({"status": "success", "application": application.serialize()}), 200
+
+
+@bp_application.route('/applications/<int:application_id>', methods=['DELETE']) #el aplicante puede eliminar su aplicacion  delete 
+@jwt_required()
+def update_application(application_id)
+    user_id = get_jwt_identity()
+    application = Application.query.get_or_404(application_id)
+
+    if application.user_id != user_id:
+        return jsonify({"status": "error", "message": "Not authorized"}), 403
+    
+    application.delete()
+    return jsonify({"status": "success", "message": "Application deleted"}), 200
