@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from models import Technologies
 
 bp_technologies = Blueprint('technologies', __name__)
 

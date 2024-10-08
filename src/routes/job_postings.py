@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, JobPosting
+from models import User, JobPosting, Status
 
 bp_job_posting = Blueprint('bp_job_posting', __name__)
 

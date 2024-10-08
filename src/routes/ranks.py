@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from models import Rank, TechKnowledge
 
 bp_ranks = Blueprint('bp_ranks', __name__)
 
