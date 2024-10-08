@@ -11,9 +11,14 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     
+    
     profile = db.relationship('Profile', backref="user", uselist=False)
-    job_postings = db.relationship('JobPosting', backref="employer", lazy=True)
-    applications = db.relationship('Application', backref="applicant", lazy=True)
+    job_postings = db.relationship('JobPosting', backref="user", lazy=True)
+    applications = db.relationship('Application', backref="user", lazy=True)
+    RankingJobPosting = db.relationship('RankingJobPosting', backref="user", lazy=True)
+    RankingApplications = db.relationship('RankingApplications', backref="user", lazy=True)
+
+
 
     def serialize(self):
         return {
@@ -83,6 +88,7 @@ class JobPosting(db.Model):
     applications = db.relationship('Application', backref='job_posting', lazy=True)
     post_languages = db.relationship('PostLanguage', backref='job_posting', lazy=True)  
     tech_knowledges = db.relationship('TechKnowledge', backref='job_posting', lazy=True)  
+    RankingJobPosting = db.relationship('RankingJobPosting', backref="job_posting", lazy=True)
 
     def serialize(self):
         return {
@@ -141,6 +147,43 @@ class TechKnowledge(db.Model):
             "job_posting_id": self.job_posting_id,
             "rank": self.rank_id,
             "technologies": self.technologies_id
+        }
+
+
+class RankingJobPosting(db.Model):
+    __tablename__ = 'RankingJobPosting'
+    id =  db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    ranking = db.Column(db.Integer, nullable=False)
+    jobPosting_id = db.Column(db.Integer, db.ForeignKey('jobpostings.id'), nullable=False)
+
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "ranking": self.ranking,
+            "jobPosting_id": self.jobPosting_id
+        }
+
+
+class RankingApplications(db.Model):
+    __tablename__ = 'RankingApplication'
+    id =  db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    ranking = db.Column(db.Integer, nullable=False)
+    application_id = db.Column(db.Integer, db.ForeignKey('applications.id'), nullable=False)
+
+    Application = db.relationship('Applications', backref='RankingApplication')
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "ranking": self.ranking,
+            "jobPosting_id": self.application_id
         }
 
 
