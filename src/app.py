@@ -32,6 +32,8 @@ CORS(app)
 app.register_blueprint(bp_auth, url_prefix="/api")
 app.register_blueprint(bp_profile, url_prefix="/api")
 
+
+
 @app.route('/')
 def main():
     return jsonify({"message": "Server running successfully!"}), 200
