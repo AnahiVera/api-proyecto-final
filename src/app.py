@@ -8,6 +8,11 @@ from models import db
 from dotenv import load_dotenv
 from routes.auth import bp_auth
 from routes.profile import bp_profile
+from routes.applications import bp_application
+from routes.languages import bp_languages
+from routes.ranks import bp_ranks
+from routes.status import bp_status
+from routes.technologies import bp_technologies
 
 load_dotenv()
 
