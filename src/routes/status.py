@@ -9,7 +9,7 @@ def get_status():
     return jsonify({"status": "success", "status": status.serialize()}), 200
 
 
-@bp_status.route('/status', methods=['POST'])
+@bp_status.route('/status', methods=['POST']) #para manejar crear application necesito insertar un status
 def create_status():
     data = request.json
     status_name = data.get('name')
