@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
 from models import Language, PostLanguage, db
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_languages = Blueprint('languages', __name__)
 
 @bp_languages.route('/languages', methods=['GET'])
+@jwt_required()
 def get_languages():
     languages = Language.query.all()
 
@@ -14,6 +16,7 @@ def get_languages():
 
 
 @bp_languages.route('/languages', methods=['POST'])
+@jwt_required()
 def create_language():
     data = request.json
     language_name = data.get('name')

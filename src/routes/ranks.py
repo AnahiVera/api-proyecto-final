@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
 from models import Rank, TechKnowledge, db
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_ranks = Blueprint('bp_ranks', __name__)
 
 @bp_ranks.route('/ranks', methods=['GET'])
+@jwt_required()
 def get_ranks():
     ranks = Rank.query.all()
 
@@ -13,6 +15,7 @@ def get_ranks():
 
 
 @bp_ranks.route('/ranks', methods=['POST'])
+@jwt_required()
 def create_ranks():
     data = request.json
     rank_name = data.get('name')

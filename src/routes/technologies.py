@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
 from models import Technologies, db
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_technologies = Blueprint('technologies', __name__)
 
 @bp_technologies.route('/technologies', methods=['GET'])
+@jwt_required()
 def get_technologies():
     technologies = Technologies.query.all()
 
@@ -13,6 +15,7 @@ def get_technologies():
     return jsonify({"status": "success", "technologies": serialized_technologies}), 200
 
 @bp_technologies.route('/technologies', methods=['POST'])
+@jwt_required()
 def new_technology():
     data = request.json
     technology_name = data.get('name')

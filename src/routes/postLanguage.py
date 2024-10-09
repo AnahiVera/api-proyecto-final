@@ -5,6 +5,7 @@ from models import PostLanguage, JobPosting, Language, User
 bp_post_language = Blueprint('bp_post_language', __name__)
 
 @bp_post_language.route('/post_languages', methods=['GET'])
+@jwt_required()
 def get_all_post_languages():
     post_languages = PostLanguage.query.all()
     serialized = [pl.serialize() for pl in post_languages]

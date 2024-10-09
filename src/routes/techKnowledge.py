@@ -6,6 +6,7 @@ bp_tech_knowledge = Blueprint('bp_tech_knowledge', __name__)
 
 
 @bp_tech_knowledge.route('/tech_knowledges', methods=['GET'])
+@jwt_required()
 def get_all_tech_knowledges():
     tech_knowledges = TechKnowledge.query.all()
     serialized = [tech.serialize() for tech in tech_knowledges]
