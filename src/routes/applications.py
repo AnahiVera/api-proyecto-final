@@ -9,12 +9,14 @@ bp_application = Blueprint('bp_application', __name__)
 @jwt_required()
 def get_applications():
     user_id = get_jwt_identity()
-    applications= Application.query.filter_by(user_id=user_id).all()
+    applications = Application.query.filter_by(user_id=user_id).all()
 
     if not applications:
-        return jsonify({"status": "success", "message": "No applications found.", "applications": [] }), 200
+        return jsonify({"status": "success", "message": "No applications found.", "applications": []}), 200
 
-    return jsonify({"status": "success", "message": "All applications found",  "applications": applications.serialize()}), 200
+    serialized_applications = [application.serialize() for application in applications]
+
+    return jsonify({"status": "success", "message": "All applications found", "applications": serialized_applications}), 200
 
 @bp_application.route('/applications', methods=['POST']) #aplicar a publicacion de trabajo
 @jwt_required()
@@ -35,7 +37,7 @@ def apply_job():
         
     )
     application.save()
-    return jsonify({"status": "success", "You have applied": Application.serialize()}), 201
+    return jsonify({"status": "success", "You have applied": application.serialize()}), 201
 
 
 @bp_application.route('/applications/<int:application_id>', methods=['GET']) # obtener applicacion en espeficifo get (id)

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import Status
+from models import Status, db
 
 bp_status = Blueprint('bp_status', __name__)
 
