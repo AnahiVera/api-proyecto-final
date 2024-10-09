@@ -14,7 +14,7 @@ from routes.ranks import bp_ranks
 from routes.status import bp_status
 from routes.technologies import bp_technologies
 from routes.job_postings import bp_job_posting
-from routes.PostLanguage import bp_post_language
+from routes.postLanguage import bp_post_language
 from routes.rankingApplications import bp_rankingApplications
 from routes.rankingJobPosting import bp_rankingJobPosting
 from routes.techKnowledge import bp_tech_knowledge
