@@ -41,3 +41,22 @@ def create_language():
         return jsonify({"status": "error", "message": str(e)}), 500
 
     return jsonify({"status": "success", "language": new_language.serialize()}), 201
+
+@bp_languages.route('/languages/<int:language_id>', methods=['DELETE'])
+@jwt_required()
+def delete_language(language_id):
+    # Buscar el lenguaje por ID
+    language = Language.query.get(language_id)
+
+    if not language:
+        return jsonify({"status": "error", "message": "El lenguaje no existe"}), 404
+
+    try:
+        # Eliminar el lenguaje de la base de datos
+        db.session.delete(language)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+    return jsonify({"status": "success", "message": "Lenguaje eliminado correctamente"}), 200
