@@ -9,7 +9,7 @@ bp_ranks = Blueprint('bp_ranks', __name__)
 def get_ranks():
     ranks = Rank.query.all()
 
-    serialized_ranks = [ranks.serialize()for rank in ranks]
+    serialized_ranks = [rank.serialize()for rank in ranks]
 
     return jsonify({"status": "success", "ranks": serialized_ranks}), 200
 
