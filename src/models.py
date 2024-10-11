@@ -111,7 +111,7 @@ class JobPosting(db.Model):
 
     applications = db.relationship('Application', backref='job_posting', lazy=True)
     languages = db.relationship('Language', secondary=post_languages, lazy=True)  
-    technologies = db.relationship('Technologies', secondary=tech_knowledges, lazy=True) 
+    technologies = db.relationship('Technology', secondary=tech_knowledges, lazy=True) 
     ranking = db.relationship('Ranking', secondary=rankingJobPosting, lazy=True)
     
 
@@ -136,7 +136,9 @@ class JobPosting(db.Model):
             "date": self.date,
             "required_time": self.required_time,
             "expiration_date": self.expiration_date,
+            "languages": [lang.name for lang in self.languages],
             "technologies": [tech.name for tech in self.technologies]
+
         }
 
 
@@ -243,7 +245,7 @@ class Language(db.Model):
         db.session.commit()
 
 
-class Technologies(db.Model):
+class Technology(db.Model):
     __tablename__ = 'technologies'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -253,7 +255,6 @@ class Technologies(db.Model):
             "id": self.id,
             "name": self.name
         }
-    
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -264,7 +265,6 @@ class Technologies(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-
 
 class Application(db.Model):
     __tablename__ = 'applications'

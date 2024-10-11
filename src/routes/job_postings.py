@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, JobPosting, Language, Technologies, Rank, post_languages, tech_knowledges
+from models import User, JobPosting, Language, Technology, Rank, post_languages, tech_knowledges
 
 bp_job_posting = Blueprint('bp_job_posting', __name__)
 
@@ -88,14 +88,14 @@ def create_job_posting():
 
 
     for t in technologies:
-        tech = Technologies.query.filter_by(name = t).first()
+        tech = Technology.query.filter_by(name = t).first()
         new_job_posting.technologies.append(tech)
         
     print(new_job_posting.serialize_full())
-    
+
     new_job_posting.save()
 
-    return jsonify({"status": "success", "message": "Job posting created!", "job_posting": new_job_posting.serialize()}), 201
+    return jsonify({"status": "success", "message": "Job posting created!", "job_posting": new_job_posting.serialize_full()}), 201
 
 
 
