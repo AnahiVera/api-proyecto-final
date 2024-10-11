@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, JobPosting, Language, TechKnowledge, PostLanguage
+from models import User, JobPosting, Language, Technologies, Rank, post_languages, tech_knowledges
 
 bp_job_posting = Blueprint('bp_job_posting', __name__)
 
@@ -43,6 +43,8 @@ def create_job_posting():
     required_time = request.json.get('required_time')
     expiration_date = request.json.get('expiration_date')
     languages = request.json.get('languages')
+    technologies = request.json.get('technologies')
+    rank = request.json.get('rank')
 
 
     if not title:
@@ -62,6 +64,12 @@ def create_job_posting():
 
     if len(languages) == 0:
         return jsonify({"status": "error", "message": "Languages is required"}), 422
+
+    if len(technologies) == 0:
+        return jsonify({"status": "error", "message": "Technology is required"}), 422
+
+    if not rank:
+        return jsonify({"status": "error", "message": "Rank is required"}), 422
         
 
     new_job_posting = JobPosting(
@@ -70,12 +78,19 @@ def create_job_posting():
         payment=payment,
         required_time=required_time,
         expiration_date=expiration_date,
-        user_id=user_id
+        user_id=user_id,
+        rank= rank
     )
 
     for l in languages:
         lang = Language.query.filter_by(name = l).first()
         new_job_posting.post_languages.append(lang)
+
+
+    for t in technologies:
+        tech = Technologies.query.filter_by(name = t).first()
+        new_job_posting.tech_knowledges.append(tech)
+
 
 
     new_job_posting.save()

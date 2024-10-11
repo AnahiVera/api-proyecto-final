@@ -1,6 +1,6 @@
-from flask import Blueprint, request, jsonify
+""" from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import TechKnowledge, JobPosting, Rank, Technologies
+from models import tech_knowledges, JobPosting, Rank, Technologies
 
 bp_tech_knowledge = Blueprint('bp_tech_knowledge', __name__)
 
@@ -8,7 +8,7 @@ bp_tech_knowledge = Blueprint('bp_tech_knowledge', __name__)
 @bp_tech_knowledge.route('/tech_knowledges', methods=['GET'])
 @jwt_required()
 def get_all_tech_knowledges():
-    tech_knowledges = TechKnowledge.query.all()
+    tech_knowledges = tech_knowledges.query.all()
     serialized = [tech.serialize() for tech in tech_knowledges]
     return jsonify({"status": "success", "tech_knowledges": serialized}), 200
 
@@ -42,7 +42,7 @@ def create_tech_knowledge():
         return jsonify({"status": "error", "message": "Technology not found"}), 404
 
 
-    new_tech_knowledge = TechKnowledge(
+    new_tech_knowledge = tech_knowledges(
         job_posting_id=job_posting_id,
         rank_id=rank_id,
         technologies_id=technologies_id
@@ -51,3 +51,4 @@ def create_tech_knowledge():
     new_tech_knowledge.save()
 
     return jsonify({"status": "success", "message": "Tech knowledge created", "tech_knowledge": new_tech_knowledge.serialize()}), 201
+ """

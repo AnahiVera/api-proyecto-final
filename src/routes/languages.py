@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import Language, PostLanguage, db
+from models import Language, post_languages, db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_languages = Blueprint('languages', __name__)

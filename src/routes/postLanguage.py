@@ -1,13 +1,13 @@
-from flask import Blueprint, request, jsonify
+""" from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import PostLanguage, JobPosting, Language, User
+from models import post_languages, JobPosting, Language, User
 
 bp_post_language = Blueprint('bp_post_language', __name__)
 
 @bp_post_language.route('/post_languages', methods=['GET'])
 @jwt_required()
 def get_all_post_languages():
-    post_languages = PostLanguage.query.all()
+    post_languages = posts_languages.query.all()
     serialized = [pl.serialize() for pl in post_languages]
     return jsonify({"status": "success", "post_languages": serialized}), 200
 
@@ -36,7 +36,7 @@ def create_post_language():
         return jsonify({"status": "error", "message": "Language not found"}), 404
 
 
-    new_post_language = PostLanguage(
+    new_post_language = posts_languages(
         job_posting_id=job_posting_id,
         language_id=language_id
     )
@@ -44,3 +44,4 @@ def create_post_language():
     new_post_language.save()
 
     return jsonify({"status": "success", "message": "Post language created", "post_language": new_post_language.serialize()}), 201
+ """

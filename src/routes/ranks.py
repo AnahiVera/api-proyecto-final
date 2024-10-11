@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import Rank, TechKnowledge, db
+from models import Rank, tech_knowledges, db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_ranks = Blueprint('bp_ranks', __name__)

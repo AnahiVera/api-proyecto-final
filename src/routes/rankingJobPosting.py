@@ -1,6 +1,6 @@
-from flask import Blueprint, request, jsonify
+""" from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import RankingJobPosting, User, JobPosting
+from models import rankingJobPosting, User, JobPosting
 
 bp_rankingJobPosting = Blueprint('bp_rankingJobPosting', __name__)
 
@@ -61,3 +61,4 @@ def create_ranking_job_posting():
 
     return jsonify({
         "status": "success", "message": "Ranking for job posting created!", "ranking_job_posting": new_ranking_job_posting.serialize()}), 201
+ """

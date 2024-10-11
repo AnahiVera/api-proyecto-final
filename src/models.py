@@ -3,6 +3,34 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+post_languages = db.Table(
+    "post_languages",
+    db.Column("job_posting_id", db.Integer, db.ForeignKey('job_postings.id'), nullable=False, primary_key=True),
+    db.Column("languages_id", db.Integer, db.ForeignKey('languages.id'), nullable=False, primary_key=True),
+)
+
+tech_knowledges = db.Table(
+    "tech_knowledges",
+    db.Column("job_posting_id", db.Integer, db.ForeignKey('job_postings.id'), nullable=False, primary_key=True),
+    db.Column("technologies_id", db.Integer, db.ForeignKey('technologies.id'), nullable=False, primary_key=True),
+    db.Column("rank_id", db.Integer, db.ForeignKey('ranks.id'), nullable=False, primary_key=True)
+)
+
+rankingJobPosting = db.Table(
+    "rankingJobPosting",
+    db.Column("user_id", db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True),
+    db.Column("ranking_id", db.Integer, db.ForeignKey('ranking.id'), nullable=False),
+    db.Column("job_posting_id", db.Integer, db.ForeignKey('job_postings.id'), nullable=False, primary_key=True)
+)
+
+rankingApplications = db.Table(
+    "rankingApplications",
+    db.Column("user_id", db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True),
+    db.Column("ranking_id", db.Integer, db.ForeignKey('ranking.id'), nullable=False),
+    db.Column("application_id", db.Integer, db.ForeignKey('applications.id'), nullable=False, primary_key=True)
+)
+
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -15,10 +43,6 @@ class User(db.Model):
     profile = db.relationship('Profile', backref="user", uselist=False)
     job_postings = db.relationship('JobPosting', backref="user", lazy=True)
     applications = db.relationship('Application', backref="user", lazy=True)
-    RankingJobPosting = db.relationship('RankingJobPosting', backref="user", lazy=True)
-    RankingApplications = db.relationship('RankingApplications', backref="user", lazy=True)
-
-
 
     def serialize(self):
         return {
@@ -86,9 +110,9 @@ class JobPosting(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     applications = db.relationship('Application', backref='job_posting', lazy=True)
-    post_languages = db.relationship('Language', secondary='post_languages', backref='job_postings', lazy=True)  
-    tech_knowledges = db.relationship('TechKnowledge', backref='job_posting', lazy=True) 
-    RankingJobPosting = db.relationship('RankingJobPosting', foreign_keys="RankingJobPosting.job_postings_id", backref='job_posting') 
+    languages = db.relationship('Language', secondary=post_languages, lazy=True)  
+    technologies = db.relationship('Technologies', secondary=tech_knowledges, lazy=True) 
+    ranking = db.relationship('Ranking', secondary=rankingJobPosting, lazy=True)
     
 
     def serialize(self):
@@ -115,76 +139,21 @@ class JobPosting(db.Model):
         db.session.commit()
 
 
-class PostLanguage(db.Model):
-    __tablename__ = 'post_languages'
-
-    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False, primary_key=True)
-    language_id = db.Column(db.Integer, db.ForeignKey('languages.id'), nullable=False, primary_key=True)
-
-
-    language = db.relationship('Language', backref='post_languages')
-
-    def serialize(self):
-        return {
-            "job_posting_id": self.job_posting_id,
-            "language": self.language_id
-        }
-
-
-class TechKnowledge(db.Model):
-    __tablename__ = 'tech_knowledges'
-    id = db.Column(db.Integer, primary_key=True)
-    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
-    rank_id = db.Column(db.Integer, db.ForeignKey('ranks.id'), nullable=False)
-    technologies_id = db.Column(db.Integer, db.ForeignKey('technologies.id'), nullable=False)
-
-
-    Technologies = db.relationship('Technologies', backref='tech_knowledges')
-    rank = db.relationship('Rank', backref='tech_knowledges')
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "job_posting_id": self.job_posting_id,
-            "rank": self.rank_id,
-            "technologies": self.technologies_id
-        }
-
-
-class RankingJobPosting(db.Model):
-    __tablename__ = 'RankingJobPosting'
+class Ranking(db.Model):
+    __tablename__ = 'ranking'
     id =  db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    ranking = db.Column(db.Integer, nullable=False)
-    job_postings_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "ranking": self.ranking,
-            "jobPosting_id": self.jobPosting_id
-        }
-
-
-class RankingApplications(db.Model):
-    __tablename__ = 'RankingApplication'
-    id =  db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    ranking = db.Column(db.Integer, nullable=False)
-    application_id = db.Column(db.Integer, db.ForeignKey('applications.id'), nullable=False)
-
-    Application = db.relationship('Application', backref='RankingApplication')
+    name = db.Column(db.String, nullable=False)
 
 
     def serialize(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
-            "ranking": self.ranking,
-            "application_id": self.application_id
+            "name": self.name
         }
-
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 class Status(db.Model):
     __tablename__ = 'status'

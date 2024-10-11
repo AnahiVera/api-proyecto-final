@@ -14,10 +14,7 @@ from routes.ranks import bp_ranks
 from routes.status import bp_status
 from routes.technologies import bp_technologies
 from routes.job_postings import bp_job_posting
-from routes.postLanguage import bp_post_language
-from routes.rankingApplications import bp_rankingApplications
-from routes.rankingJobPosting import bp_rankingJobPosting
-from routes.techKnowledge import bp_tech_knowledge
+
 
 
 load_dotenv()
@@ -48,10 +45,6 @@ app.register_blueprint(bp_ranks, url_prefix="/api")
 app.register_blueprint(bp_status, url_prefix="/api")
 app.register_blueprint(bp_technologies, url_prefix="/api")
 app.register_blueprint(bp_job_posting, url_prefix="/api")
-app.register_blueprint(bp_post_language, url_prefix="/api")
-app.register_blueprint(bp_rankingApplications, url_prefix="/api")
-app.register_blueprint(bp_rankingJobPosting, url_prefix="/api")
-app.register_blueprint(bp_tech_knowledge, url_prefix="/api")
 
 
 @app.route('/')
