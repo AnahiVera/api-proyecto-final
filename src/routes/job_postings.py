@@ -4,6 +4,16 @@ from models import User, JobPosting, Language, TechKnowledge, PostLanguage
 
 bp_job_posting = Blueprint('bp_job_posting', __name__)
 
+@bp_job_posting.route('/job_postings', methods=['GET'])
+@jwt_required()
+def get_all_job_postings():
+    job_postings = JobPosting.query.all()
+    
+    if not job_postings:
+        return jsonify({"status": "error", "message": "No job postings found"}), 404
+    
+    return jsonify({"status": "success", "job_postings": job_postings.serialize()}), 200
+
 
 @bp_job_posting.route('/job_postings/<int:id>', methods=['GET'])
 @jwt_required()
