@@ -44,7 +44,7 @@ def create_job_posting():
     expiration_date = request.json.get('expiration_date')
     languages = request.json.get('languages')
     technologies = request.json.get('technologies')
-    rank = request.json.get('rank')
+    rank_id = request.json.get('rank')
 
 
     if not title:
@@ -68,7 +68,7 @@ def create_job_posting():
     if len(technologies) == 0:
         return jsonify({"status": "error", "message": "Technology is required"}), 422
 
-    if not rank:
+    if not rank_id:
         return jsonify({"status": "error", "message": "Rank is required"}), 422
         
 
@@ -79,17 +79,17 @@ def create_job_posting():
         required_time=required_time,
         expiration_date=expiration_date,
         user_id=user_id,
-        rank= rank
+        rank_id = rank_id
     )
 
     for l in languages:
         lang = Language.query.filter_by(name = l).first()
-        new_job_posting.post_languages.append(lang)
+        new_job_posting.languages.append(lang)
 
 
     for t in technologies:
         tech = Technologies.query.filter_by(name = t).first()
-        new_job_posting.tech_knowledges.append(tech)
+        new_job_posting.technologies.append(tech)
 
 
 
