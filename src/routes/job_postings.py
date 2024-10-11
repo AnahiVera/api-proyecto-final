@@ -72,15 +72,15 @@ def create_job_posting():
         return jsonify({"status": "error", "message": "Rank is required"}), 422
         
 
-    new_job_posting = JobPosting(
-        title=title,
-        description=description,
-        payment=payment,
-        required_time=required_time,
-        expiration_date=expiration_date,
-        user_id=user_id,
-        rank_id = rank_id
-    )
+    new_job_posting = JobPosting()
+    new_job_posting.title=title
+    new_job_posting.description=description
+    new_job_posting.payment=payment
+    new_job_posting.required_time=required_time
+    new_job_posting.expiration_date=expiration_date
+    new_job_posting.user_id=user_id
+    new_job_posting.rank_id = rank_id
+    
 
     for l in languages:
         lang = Language.query.filter_by(name = l).first()
@@ -90,9 +90,9 @@ def create_job_posting():
     for t in technologies:
         tech = Technologies.query.filter_by(name = t).first()
         new_job_posting.technologies.append(tech)
-
-
-
+        
+    print(new_job_posting.serialize_full())
+    
     new_job_posting.save()
 
     return jsonify({"status": "success", "message": "Job posting created!", "job_posting": new_job_posting.serialize()}), 201

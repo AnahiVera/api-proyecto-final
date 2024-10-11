@@ -17,3 +17,7 @@ cloudinary = "*"
 
 [requires]
 python_version = "3.12"
+
+[scripts]
+seed="python src/seed.py"
+

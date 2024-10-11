@@ -12,8 +12,7 @@ post_languages = db.Table(
 tech_knowledges = db.Table(
     "tech_knowledges",
     db.Column("job_posting_id", db.Integer, db.ForeignKey('job_postings.id'), nullable=False, primary_key=True),
-    db.Column("technologies_id", db.Integer, db.ForeignKey('technologies.id'), nullable=False, primary_key=True),
-    db.Column("rank_id", db.Integer, db.ForeignKey('ranks.id'), nullable=False, primary_key=True)
+    db.Column("technologies_id", db.Integer, db.ForeignKey('technologies.id'), nullable=False, primary_key=True)
 )
 
 rankingJobPosting = db.Table(
@@ -127,6 +126,19 @@ class JobPosting(db.Model):
             "required_time": self.required_time,
             "expiration_date": self.expiration_date
         }
+    def serialize_full(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "payment": self.payment,
+            "employer": self.user_id,
+            "date": self.date,
+            "required_time": self.required_time,
+            "expiration_date": self.expiration_date,
+            "technologies": [tech.name for tech in self.technologies]
+        }
+
 
     def save(self):
         db.session.add(self)
@@ -156,6 +168,14 @@ class Ranking(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
 class Status(db.Model):
     __tablename__ = 'status'
     id =  db.Column(db.Integer, primary_key=True)
@@ -167,6 +187,16 @@ class Status(db.Model):
             "id": self.id,
             "name": self.name
         }
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 
 class Rank(db.Model):
@@ -179,7 +209,16 @@ class Rank(db.Model):
             "id": self.id,
             "name": self.name
         }
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 
 class Language(db.Model):
@@ -192,6 +231,16 @@ class Language(db.Model):
             "id": self.id,
             "name": self.name
         }
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 
 class Technologies(db.Model):
@@ -204,6 +253,18 @@ class Technologies(db.Model):
             "id": self.id,
             "name": self.name
         }
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Application(db.Model):
     __tablename__ = 'applications'
