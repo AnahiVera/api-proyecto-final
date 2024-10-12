@@ -15,6 +15,7 @@ def profile():
 
 
 
+
 @bp_profile.route('/profile', methods=['PATCH'])
 @jwt_required()
 def update_profile():
