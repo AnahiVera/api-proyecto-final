@@ -26,6 +26,9 @@ def apply_job():
     job_id = data.get('job_posting_id')
     job = JobPosting.query.get_or_404(job_id)
 
+    if job.user_id == user_id:
+        return jsonify({"status": "error", "message": "You cannot apply to your own job posting"}), 400
+
     already_applied= Application.query.filter_by(user_id=user_id, job_posting_id= job_id).first()
     if already_applied:
         return jsonify({"status": "error", "message": "You have already applied to this offer"}), 400
