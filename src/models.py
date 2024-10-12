@@ -114,7 +114,6 @@ class JobPosting(db.Model):
     technologies = db.relationship('Technology', secondary=tech_knowledges, lazy=True) 
     ranking = db.relationship('Ranking', secondary=rankingJobPosting, lazy=True)
     
-
     def serialize(self):
         return {
             "id": self.id,
@@ -127,7 +126,6 @@ class JobPosting(db.Model):
             "expiration_date": self.expiration_date,
             "languages": [lang.name for lang in self.languages],
             "technologies": [tech.name for tech in self.technologies]
-
         }
 
 
