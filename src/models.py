@@ -124,17 +124,6 @@ class JobPosting(db.Model):
             "employer": self.user_id,
             "date": self.date,
             "required_time": self.required_time,
-            "expiration_date": self.expiration_date
-        }
-    def serialize_full(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "payment": self.payment,
-            "employer": self.user_id,
-            "date": self.date,
-            "required_time": self.required_time,
             "expiration_date": self.expiration_date,
             "languages": [lang.name for lang in self.languages],
             "technologies": [tech.name for tech in self.technologies]

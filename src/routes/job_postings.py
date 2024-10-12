@@ -91,11 +91,11 @@ def create_job_posting():
         tech = Technology.query.filter_by(name = t).first()
         new_job_posting.technologies.append(tech)
         
-    print(new_job_posting.serialize_full())
+    print(new_job_posting.serialize())
 
     new_job_posting.save()
 
-    return jsonify({"status": "success", "message": "Job posting created!", "job_posting": new_job_posting.serialize_full()}), 201
+    return jsonify({"status": "success", "message": "Job posting created!", "job_posting": new_job_posting.serialize()}), 201
 
 
 
