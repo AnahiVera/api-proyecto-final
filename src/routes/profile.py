@@ -14,6 +14,16 @@ def profile():
     return jsonify({"status": "success", "message": "Profile loaded",  "user": user.serialize()})
 
 
+@bp_profile.route('/profile/<int:id>', methods=['GET'])
+@jwt_required()
+def profile_by_id(id):
+    user = User.query.get(id)
+
+    if not user:
+        return jsonify({"status": "error", "message": "Post's user not found"}), 404
+
+    return jsonify({"status": "success", "message": "Profile loaded",  "user": user.serialize()})
+
 
 
 @bp_profile.route('/profile', methods=['PATCH'])
