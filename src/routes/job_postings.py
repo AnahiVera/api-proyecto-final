@@ -15,7 +15,6 @@ def get_all_job_postings():
 
 
 @bp_job_posting.route('/job_postings/<int:id>', methods=['GET'])
-@jwt_required()
 def get_job_posting(id):
     job_posting = JobPosting.query.get(id)
     if not job_posting:
