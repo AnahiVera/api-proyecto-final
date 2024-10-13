@@ -14,6 +14,15 @@ def get_all_job_postings():
     return jsonify({"status": "success", "job_postings": job_postings.serialize()}), 200
 
 
+@bp_job_posting.route('/job_postings/<int:id>', methods=['GET'])
+@jwt_required()
+def get_job_posting(id):
+    job_posting = JobPosting.query.get(id)
+    if not job_posting:
+        return jsonify({"status": "error", "message": "Job posting not found"}), 404
+    return jsonify({"status": "success", "job_posting": job_posting.serialize()}), 200
+
+
 
 @bp_job_posting.route('/job_postings/user/<int:user_id>', methods=['GET'])
 @jwt_required()
