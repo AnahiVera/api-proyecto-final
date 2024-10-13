@@ -19,10 +19,13 @@ def get_all_job_postings():
 @jwt_required()
 def get_job_posting_by_id(user_id):
     job_posting = JobPosting.query.filter_by(user_id=user_id).all()
+
     if not job_posting:
         return jsonify({"status": "error", "message": "Job posting not found"}), 404
+    
+    serialized_post = [post.serialize()for post in job_posting]
 
-    return jsonify({"status": "success", "job_posting": job_posting.serialize()}), 200
+    return jsonify({"status": "success", "job_posting": serialized_post}), 200
 
 
 
