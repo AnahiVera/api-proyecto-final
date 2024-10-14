@@ -5,7 +5,6 @@ from models import User, JobPosting, Language, Technology, Rank, post_languages,
 bp_job_posting = Blueprint('bp_job_posting', __name__)
 
 @bp_job_posting.route('/job_postings', methods=['GET'])
-@jwt_required()
 def get_all_job_postings():
     job_postings = JobPosting.query.all()
     
@@ -16,14 +15,26 @@ def get_all_job_postings():
 
 
 @bp_job_posting.route('/job_postings/<int:id>', methods=['GET'])
-@jwt_required()
 def get_job_posting(id):
     job_posting = JobPosting.query.get(id)
-    
+    if not job_posting:
+        return jsonify({"status": "error", "message": "Job posting not found"}), 404
+    return jsonify({"status": "success", "job_posting": job_posting.serialize()}), 200
+
+
+
+@bp_job_posting.route('/job_postings/user/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_job_posting_by_id(user_id):
+    job_posting = JobPosting.query.filter_by(user_id=user_id).all()
+
     if not job_posting:
         return jsonify({"status": "error", "message": "Job posting not found"}), 404
     
-    return jsonify({"status": "success", "job_posting": job_posting.serialize()}), 200
+    serialized_post = [post.serialize()for post in job_posting]
+
+    return jsonify({"status": "success", "job_posting": serialized_post}), 200
+
 
 
 

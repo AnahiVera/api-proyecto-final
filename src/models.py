@@ -49,7 +49,8 @@ class User(db.Model):
             "username": self.username,
             "email": self.email,
             "is_active": self.is_active,
-            "profile": self.profile.serialize() if self.profile else None
+            "profile": self.profile.serialize() if self.profile else None,
+            "job_postings": [{"id": job.id, "title": job.title} for job in self.job_postings]
         }
 
     def save(self):
