@@ -42,7 +42,7 @@ def update_profile():
         else:
             resp = cloudinary.uploader.upload(file, folder="profiles_users")
 
-
+  
     user.profile.biography = request.form['biography'] if 'biography' in request.form else user.profile.biography
     user.profile.github = request.form['github'] if 'github' in request.form else user.profile.github
     user.profile.linkedin = request.form['linkedin'] if 'linkedin' in request.form else user.profile.linkedin
