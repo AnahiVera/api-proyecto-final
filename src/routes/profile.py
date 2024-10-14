@@ -2,6 +2,7 @@ import cloudinary.uploader
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import User, Profile
+from werkzeug.security import generate_password_hash, check_password_hash
 
 bp_profile = Blueprint('bp_profile', __name__)
 
@@ -48,6 +49,10 @@ def update_profile():
 
     user.profile.avatar = resp['secure_url'] if resp is not None else user.profile.avatar
     user.profile.public_id = resp['public_id'] if resp is not None else user.profile.public_id
+
+    password = request.form.get('password')
+    if password:
+        user.password = generate_password_hash(password)
 
     user.update()
 
