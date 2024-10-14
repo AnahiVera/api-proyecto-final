@@ -11,7 +11,11 @@ def get_all_job_postings():
     if not job_postings:
         return jsonify({"status": "error", "message": "No job postings found"}), 404
     
-    return jsonify({"status": "success", "job_postings": job_postings.serialize()}), 200
+    print(job_postings)
+    serialized_jobs = [post.serialize()for post in job_postings]
+    print(serialized_jobs)
+    
+    return jsonify({"status": "success", "job_postings": serialized_jobs}), 200
 
 
 @bp_job_posting.route('/job_postings/<int:id>', methods=['GET'])
