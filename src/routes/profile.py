@@ -15,7 +15,6 @@ def profile():
 
 
 @bp_profile.route('/profile/<int:id>', methods=['GET'])
-@jwt_required()
 def profile_by_id(id):
     user = User.query.get(id)
 
