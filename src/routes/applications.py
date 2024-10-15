@@ -41,7 +41,7 @@ def apply_job():
         
     )
     application.save()
-    return jsonify({"status": "success", "You have applied": application.serialize()}), 201
+    return jsonify({"status": "success", 'message' : "You have applied", 'result' : application.serialize()}), 201
 
 
 @bp_application.route('/applications/<int:application_id>', methods=['GET']) # obtener applicacion en espeficifo get (id)
