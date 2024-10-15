@@ -126,7 +126,8 @@ class JobPosting(db.Model):
             "required_time": self.required_time,
             "expiration_date": self.expiration_date,
             "languages": [lang.name for lang in self.languages],
-            "technologies": [tech.name for tech in self.technologies]
+            "technologies": [tech.name for tech in self.technologies], 
+            "applications": [application.user.username for application in self.applications] 
         }
 
 
