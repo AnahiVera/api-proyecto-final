@@ -5,11 +5,12 @@ from models import Application, JobPosting, Status
 
 bp_application = Blueprint('bp_application', __name__)
 
-@bp_application.route('/applications', methods=['GET'])
+@bp_application.route('/applications/post/<int:post_id>', methods=['GET'])
 @jwt_required()
-def get_applications():
+def get_applications(post_id):
     user_id = get_jwt_identity()
-    applications = Application.query.filter_by(user_id=user_id).all()
+
+    applications = Application.query.filter_by(job_posting_id=post_id).all()
 
     if not applications:
         return jsonify({"status": "success", "message": "No applications found.", "applications": []}), 200
