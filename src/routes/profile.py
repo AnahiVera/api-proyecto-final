@@ -42,11 +42,22 @@ def update_profile():
         else:
             resp = cloudinary.uploader.upload(file, folder="profiles_users")
 
+    if 'resume' in request.files:
+        file = request.files['resume']
+        if user.profile.public_id:
+            resp = cloudinary.uploader.upload(file, public_id=user.profile.public_id)
+        else:
+            resp = cloudinary.uploader.upload(file, folder="ResumeUser")
+
   
     user.profile.biography = request.form['biography'] if 'biography' in request.form else user.profile.biography
     user.profile.github = request.form['github'] if 'github' in request.form else user.profile.github
     user.profile.linkedin = request.form['linkedin'] if 'linkedin' in request.form else user.profile.linkedin
+    user.profile.phone = request.form['phone'] if 'phone' in request.form else user.profile.phone
+    user.profile.contry = request.form['contry'] if 'contry' in request.form else user.profile.contry
 
+
+    user.profile.resume = resp['secure_url'] if resp is not None else user.profile.resume
     user.profile.avatar = resp['secure_url'] if resp is not None else user.profile.avatar
     user.profile.public_id = resp['public_id'] if resp is not None else user.profile.public_id
 

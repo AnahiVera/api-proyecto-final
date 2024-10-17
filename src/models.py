@@ -73,6 +73,9 @@ class Profile(db.Model):
     github = db.Column(db.String, default="")
     linkedin = db.Column(db.String, default="")
     avatar = db.Column(db.String, default="")
+    phone = db.Column(db.String, default="")
+    country = db.Column(db.String, default="")
+    resume = db.Column(db.String, default="")
     public_id = db.Column(db.String, default="")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
@@ -82,7 +85,10 @@ class Profile(db.Model):
             "biography": self.biography,
             "github": self.github,
             "linkedin": self.linkedin,
-            "avatar": self.avatar
+            "avatar": self.avatar,
+            "phone" :self.phone,
+            "country" :self.country,
+            "resume" :self.resume
         }
 
     def save(self):
