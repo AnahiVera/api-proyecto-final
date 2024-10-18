@@ -56,7 +56,6 @@ def update_profile():
     user.profile.phone = request.form['phone'] if 'phone' in request.form else user.profile.phone
     user.profile.contry = request.form['contry'] if 'contry' in request.form else user.profile.contry
 
-
     user.profile.resume = resp['secure_url'] if resp is not None else user.profile.resume
     user.profile.avatar = resp['secure_url'] if resp is not None else user.profile.avatar
     user.profile.public_id = resp['public_id'] if resp is not None else user.profile.public_id
