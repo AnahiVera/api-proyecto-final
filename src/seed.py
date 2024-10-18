@@ -30,6 +30,7 @@ with app.app_context():
     rank3= Rank()
     rank3.name='Senior'
     rank3.save()
+    
 
     status1= Status()
     status1.name='Public'
@@ -38,6 +39,12 @@ with app.app_context():
     status2= Status()
     status2.name='Completed'
     status2.save()
+
+    status3= Status()
+    status3.name='In process'
+    status3.save()
+
+
 
     technologies1= Technology()
     technologies1.name='Java'
@@ -74,3 +81,4 @@ with app.app_context():
     technologies9= Technology()
     technologies9.name='NodeJS'
     technologies9.save()
+

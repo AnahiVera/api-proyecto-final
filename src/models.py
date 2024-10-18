@@ -120,6 +120,7 @@ class JobPosting(db.Model):
     languages = db.relationship('Language', secondary=post_languages, lazy=True)  
     technologies = db.relationship('Technology', secondary=tech_knowledges, lazy=True) 
     ranking = db.relationship('Ranking', secondary=rankingJobPosting, lazy=True)
+    status = db.relationship('Status', lazy=True )
     
     def serialize(self):
         return {
