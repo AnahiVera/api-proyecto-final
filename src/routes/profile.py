@@ -54,7 +54,7 @@ def update_profile():
     user.profile.github = request.form['github'] if 'github' in request.form else user.profile.github
     user.profile.linkedin = request.form['linkedin'] if 'linkedin' in request.form else user.profile.linkedin
     user.profile.phone = request.form['phone'] if 'phone' in request.form else user.profile.phone
-    user.profile.contry = request.form['contry'] if 'contry' in request.form else user.profile.contry
+    user.profile.country = request.form['country'] if 'country' in request.form else user.profile.country
 
     user.profile.resume = resp['secure_url'] if resp is not None else user.profile.resume
     user.profile.avatar = resp['secure_url'] if resp is not None else user.profile.avatar
