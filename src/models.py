@@ -115,7 +115,7 @@ class JobPosting(db.Model):
     expiration_date = db.Column(db.DateTime, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     rank_id = db.Column(db.Integer, db.ForeignKey('ranks.id'), nullable=False)
-    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), nullable=False)
+    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), default= 1,  nullable=False)
 
 
     applications = db.relationship('Application', backref='job_posting', lazy=True)
