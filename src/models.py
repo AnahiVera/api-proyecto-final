@@ -138,7 +138,8 @@ class JobPosting(db.Model):
             "rank" : self.rank.name,
             "languages": [lang.name for lang in self.languages],
             "technologies": [tech.name for tech in self.technologies], 
-            "applications": [application.user.username for application in self.applications] 
+            "applications": [application.user.username for application in self.applications],
+            "status": self.status.name
         }
 
 

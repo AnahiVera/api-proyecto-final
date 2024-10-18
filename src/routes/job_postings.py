@@ -133,6 +133,7 @@ def update_job_posting(id):
     job_posting.payment = request.json.get('payment', job_posting.payment)
     job_posting.required_time = request.json.get('required_time', job_posting.required_time)
     job_posting.expiration_date = request.json.get('expiration_date', job_posting.expiration_date)
+    job_posting.status_id = request.json.get('status_id', job_posting.status_id)
 
     job_posting.update()
 
