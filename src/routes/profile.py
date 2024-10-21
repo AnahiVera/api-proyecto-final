@@ -29,25 +29,33 @@ def profile_by_id(id):
 @bp_profile.route('/profile', methods=['PATCH'])
 @jwt_required()
 def update_profile():
-    file = None
-    resp = None
+    avatarFile = None
+    avatarResp = None
+
+    resumeFile = None
+    resumeResp = None
+
+
 
     id = get_jwt_identity()
     user = User.query.get(id)
     
     if 'avatar' in request.files:
-        file = request.files['avatar']
+        avatarFile = request.files['avatar']
         if user.profile.public_id:
-            resp = cloudinary.uploader.upload(file, public_id=user.profile.public_id)
+            avatarResp = cloudinary.uploader.upload(avatarFile, public_id=user.profile.public_id)
         else:
-            resp = cloudinary.uploader.upload(file, folder="profiles_users")
+            avatarResp = cloudinary.uploader.upload(avatarFile, folder="profiles_users")
+
 
     if 'resume' in request.files:
-        file = request.files['resume']
+        resumeFile = request.files['resume']
         if user.profile.file_id:
-            resp = cloudinary.uploader.upload(file, file_id=user.profile.file_id)
+            resumeResp = cloudinary.uploader.upload(resumeFile, file_id=user.profile.file_id)
         else:
-            resp = cloudinary.uploader.upload(file, folder="ResumeUser")
+            resumeResp = cloudinary.uploader.upload(resumeFile, folder="ResumeUser")
+            
+
 
   
     user.profile.biography = request.form['biography'] if 'biography' in request.form else user.profile.biography
@@ -56,10 +64,13 @@ def update_profile():
     user.profile.phone = request.form['phone'] if 'phone' in request.form else user.profile.phone
     user.profile.country = request.form['country'] if 'country' in request.form else user.profile.country
 
-    user.profile.resume = resp['secure_url'] if resp is not None else user.profile.resume
-    user.profile.avatar = resp['secure_url'] if resp is not None else user.profile.avatar
-    user.profile.public_id = resp['public_id'] if resp is not None else user.profile.public_id
-    user.profile.file_id = resp['file_id'] if resp is not None else user.profile.file_id
+
+    user.profile.avatar = avatarResp['secure_url'] if avatarResp is not None else user.profile.avatar
+    user.profile.public_id = avatarResp['public_id'] if avatarResp is not None else user.profile.public_id
+    
+    
+    user.profile.resume = resumeResp['secure_url'] if resumeResp is not None else user.profile.resume
+    user.profile.file_id = resumeResp['file_id'] if resumeResp is not None else user.profile.file_id
 
     password = request.form.get('password')
     if password:
