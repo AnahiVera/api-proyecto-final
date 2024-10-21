@@ -3,7 +3,18 @@ from models import Rank, Technology, Language, Status
 
 
 with app.app_context():
+    status4 = Status()
+    status4.name='Pending'
+    status4.save()
 
+    status5 = Status()
+    status5.name='Rejected'
+    status5.save()
+    
+    status6 = Status()
+    status6.name='Accepted'
+    status6.save()
+"""
     lang1 = Language()
     lang1.name='Spanish'
     lang1.save()
@@ -42,19 +53,6 @@ with app.app_context():
     status3.name='In process'
     status3.save()
 
-    status4 = Status()
-    status4.name='Pending'
-    status4.save()
-
-    status5 = Status()
-    status5.name='Rejected'
-    status5.save()
-    
-    status6 = Status()
-    status6.name='Accepted'
-    status6.save()
-
-
     technologies1 = Technology()
     technologies1.name='Java'
     technologies1.save()
@@ -90,3 +88,4 @@ with app.app_context():
     technologies9 = Technology()
     technologies9.name='NodeJS'
     technologies9.save()
+ """
