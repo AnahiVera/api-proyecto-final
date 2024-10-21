@@ -78,6 +78,9 @@ class Profile(db.Model):
     resume = db.Column(db.String, default="")
     public_id = db.Column(db.String, default="")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    file_id = db.Column(db.String, default="")
+
+
 
     def serialize(self):
         return {

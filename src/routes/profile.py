@@ -44,8 +44,8 @@ def update_profile():
 
     if 'resume' in request.files:
         file = request.files['resume']
-        if user.profile.public_id:
-            resp = cloudinary.uploader.upload(file, public_id=user.profile.public_id)
+        if user.profile.file_id:
+            resp = cloudinary.uploader.upload(file, file_id=user.profile.file_id)
         else:
             resp = cloudinary.uploader.upload(file, folder="ResumeUser")
 
@@ -59,6 +59,7 @@ def update_profile():
     user.profile.resume = resp['secure_url'] if resp is not None else user.profile.resume
     user.profile.avatar = resp['secure_url'] if resp is not None else user.profile.avatar
     user.profile.public_id = resp['public_id'] if resp is not None else user.profile.public_id
+    user.profile.file_id = resp['file_id'] if resp is not None else user.profile.file_id
 
     password = request.form.get('password')
     if password:
