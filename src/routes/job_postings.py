@@ -1,12 +1,20 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import User, JobPosting, Language, Technology, Rank, post_languages, tech_knowledges
+from datetime import datetime
+from sqlalchemy import and_
 
 bp_job_posting = Blueprint('bp_job_posting', __name__)
 
 @bp_job_posting.route('/job_postings', methods=['GET'])
 def get_all_job_postings():
-    job_postings = JobPosting.query.all()
+    current_date = datetime.now().date()
+    job_postings = JobPosting.query.filter(and_(JobPosting.expiration_date > current_date, JobPosting.status_id == 1))
+    expire_posts = JobPosting.query.filter(and_(JobPosting.expiration_date <= current_date, JobPosting.status_id == 1))
+
+    for post in expire_posts:
+        post.status_id = 7
+        post.update()
     
     if not job_postings:
         return jsonify({"status": "error", "message": "No job postings found"}), 404
