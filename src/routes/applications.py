@@ -36,9 +36,7 @@ def apply_job():
     
     application  = Application (
         user_id=user_id,
-        job_posting_id=job_id,
-        status_id = 1
-        
+        job_posting_id=job_id
     )
     application.save()
     return jsonify({"status": "success", 'message' : "You have applied", 'result' : application.serialize()}), 201

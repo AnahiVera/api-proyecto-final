@@ -54,9 +54,13 @@ def register():
     if not password:
         return jsonify({"status": "error", "message": "Password is required"}), 422
 
-    found = User.query.filter_by(username=username).first()
+    email_found = User.query.filter_by(email=email).first()
+    user_found = User.query.filter_by(username=username).first()
 
-    if found:
+    if email_found:
+        return jsonify({"status": "error", "message": "Email is already in use!"}), 422
+    
+    if user_found:
         return jsonify({"status": "error", "message": "Username is already in use!"}), 422
     
     profile = Profile()
