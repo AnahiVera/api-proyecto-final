@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import Application, JobPosting, Status
+from sqlalchemy import and_
 
 
 bp_application = Blueprint('bp_application', __name__)
@@ -71,6 +72,32 @@ def update_application(application_id):
     
     application.update()
     return jsonify({"status": "success", "application": application.serialize()}), 200
+
+
+@bp_application.route('/applications/accept/<int:id>', methods=['PATCH']) #el empleador debe poder actualizar el status (aceptar o rechazar, pendiente?) Patch (id) 
+@jwt_required()
+def accept_application(id):
+
+    user_id = get_jwt_identity()
+    application = Application.query.get_or_404(id)
+    rejected_applications = Application.query.filter(and_(Application.job_posting_id==application.job_posting_id, Application.id!=id))
+    
+    # Solo el empleador de la publicación puede actualizar el estado
+    if application.job_posting.user_id != user_id:
+        return jsonify({"status": "error", "message": "Not authorized"}), 403
+    
+
+    for apply in rejected_applications:
+        apply.status_id = 5
+        apply.update()
+    
+    application.status_id = 6
+    application.update()
+
+    serialized_rejected = [apply.serialize() for apply in rejected_applications]
+
+    application.update()
+    return jsonify({"status": "success", "application": application.serialize(), "rejected_applications" : serialized_rejected}), 200
 
 
 @bp_application.route('/applications/<int:application_id>', methods=['DELETE']) #el aplicante puede eliminar su aplicacion  delete 
