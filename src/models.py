@@ -275,7 +275,7 @@ class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
-    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), nullable=False)
+    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), default=4, nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
 
     status = db.relationship('Status', backref='applications')
