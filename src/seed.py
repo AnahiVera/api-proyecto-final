@@ -3,6 +3,10 @@ from models import Rank, Technology, Language, Status
 
 
 with app.app_context():
+    status7 = Status()
+    status7.name='Private'
+    status7.save()
+"""    
     status4 = Status()
     status4.name='Pending'
     status4.save()
@@ -14,7 +18,7 @@ with app.app_context():
     status6 = Status()
     status6.name='Accepted'
     status6.save()
-"""
+
     lang1 = Language()
     lang1.name='Spanish'
     lang1.save()
