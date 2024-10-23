@@ -73,23 +73,23 @@ def get_application(application_id):
     return jsonify({"status": "success", "application": application.serialize()}), 200
 
 
-@bp_application.route('/applications/<int:application_id>', methods=['PATCH']) #el empleador debe poder actualizar el status (aceptar o rechazar, pendiente?) Patch (id) 
+@bp_application.route('/applications/reject/<int:id>', methods=['PATCH']) #el empleador debe poder actualizar el status (aceptar o rechazar, pendiente?) Patch (id) 
 @jwt_required()
-def update_application(application_id):
+def reject_application(id):
 
     user_id = get_jwt_identity()
-    application = Application.query.get_or_404(application_id)
+    application = Application.query.get_or_404(id)
     
     # Solo el empleador de la publicación puede actualizar el estado
     if application.job_posting.user_id != user_id:
-        return jsonify({"status": "error", "message": "Not authorized"}), 403
+        return jsonify({'title': 'Not completed',"status": "error", "message": "Not authorized"}), 403
     
-    data = request.json
-    if 'status_id' in data:
-        application.status_id = data['status_id']
+    if application.status_id == 5:
+        return jsonify({'title': 'Not completed',"status": "error", "message": "The applicant is already rejected"}), 409
     
+    application.status_id = 5
     application.update()
-    return jsonify({"status": "success", "application": application.serialize()}), 200
+    return jsonify({'title': 'Completed',"status": "success",'message': 'The applicant has been rejected', "application": application.serialize()}), 200
 
 
 @bp_application.route('/applications/accept/<int:id>', methods=['PATCH']) #el empleador debe poder actualizar el status (aceptar o rechazar, pendiente?) Patch (id) 
@@ -102,7 +102,10 @@ def accept_application(id):
     
     # Solo el empleador de la publicación puede actualizar el estado
     if application.job_posting.user_id != user_id:
-        return jsonify({"status": "error", "message": "Not authorized"}), 403
+        return jsonify({'title': 'Not completed', "status": "error", "message": "Not authorized"}), 403
+
+    if application.status_id == 5:
+        return jsonify({'title': 'Not completed',"status": "error", "message": "The applicant is already rejected"}), 409
     
 
     for apply in rejected_applications:
@@ -115,7 +118,7 @@ def accept_application(id):
     serialized_rejected = [apply.serialize() for apply in rejected_applications]
 
     application.update()
-    return jsonify({"status": "success",'message': 'The applicant has been accepted, all the rest have been rejected', "application": application.serialize(), "rejected_applications" : serialized_rejected}), 200
+    return jsonify({'title': 'Completed', "status": "success",'message': 'The applicant has been accepted, all the rest have been rejected', "application": application.serialize(), "rejected_applications" : serialized_rejected}), 200
 
 
 @bp_application.route('/applications/<int:application_id>', methods=['DELETE']) #el aplicante puede eliminar su aplicacion  
