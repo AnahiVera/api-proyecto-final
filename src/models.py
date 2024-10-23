@@ -285,7 +285,7 @@ class Application(db.Model):
         return {
             "id": self.id,
             "user": self.user_id,
-            "status": self.status_id,
+            "status": self.status.name,
             "date": self.date,
             "job_posting": {
                 "id": self.job_posting.id,
