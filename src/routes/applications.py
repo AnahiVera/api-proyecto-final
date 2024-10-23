@@ -97,7 +97,7 @@ def accept_application(id):
     serialized_rejected = [apply.serialize() for apply in rejected_applications]
 
     application.update()
-    return jsonify({"status": "success", "application": application.serialize(), "rejected_applications" : serialized_rejected}), 200
+    return jsonify({"status": "success",'message': 'The applicant has been accepted, all the rest have been rejected', "application": application.serialize(), "rejected_applications" : serialized_rejected}), 200
 
 
 @bp_application.route('/applications/<int:application_id>', methods=['DELETE']) #el aplicante puede eliminar su aplicacion  delete 
