@@ -279,14 +279,21 @@ class Application(db.Model):
     date = db.Column(db.DateTime, default=datetime.now)
 
     status = db.relationship('Status', backref='applications')
+    
 
     def serialize(self):
         return {
             "id": self.id,
             "user": self.user_id,
-            "job": self.job_posting_id,
             "status": self.status_id,
-            "date": self.date
+            "date": self.date,
+            "job_posting": {
+                "id": self.job_posting.id,
+                "title": self.job_posting.title,
+                "status": self.job_posting.status.name,
+                "payment": self.job_posting.payment,
+                "employer": self.job_posting.user_id
+          }
         }
 
     def save(self):
