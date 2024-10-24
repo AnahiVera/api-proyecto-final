@@ -114,7 +114,7 @@ def create_job_posting():
         
     new_job_posting.save()
 
-    return jsonify({"status": "success", "message": "Job posting created!", "job_posting": new_job_posting.serialize()}), 201
+    return jsonify({'title': 'Completed!',"status": "success", "message": "Job post created!", "job_posting": new_job_posting.serialize()}), 201
 
 
 
