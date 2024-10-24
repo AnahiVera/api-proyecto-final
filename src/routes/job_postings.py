@@ -114,7 +114,7 @@ def create_job_posting():
         
     new_job_posting.save()
 
-    return jsonify({'title': 'Completed!',"status": "success", "message": "Job post created!", "job_posting": new_job_posting.serialize()}), 201
+    return jsonify({"status": "success", "message": "Job posting created!", "job_posting": new_job_posting.serialize()}), 201
 
 
 
@@ -177,7 +177,7 @@ def update_job_posting(id):
 
     job_posting.update()
 
-    return jsonify({"status": "success", "message": "Job post updated!", "job_posting": job_posting.serialize()}), 200
+    return jsonify({"title":"Completed" "status": "success", "message": "Job post updated!", "job_posting": job_posting.serialize()}), 200
 
 
 @bp_job_posting.route('/job_postings/<int:id>', methods=['DELETE'])
