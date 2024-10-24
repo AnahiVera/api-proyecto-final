@@ -165,19 +165,17 @@ def update_job_posting(id):
         print(lang)
         job_posting.languages = lang
     else :
-        
         job_posting.languages = job_posting.languages
 
     if len(tech) > 0 :
         print(tech) 
         job_posting.technologies = tech
     else :
-      
         job_posting.technologies = job_posting.technologies
 
     job_posting.update()
 
-    return jsonify({"title":"Completed" "status": "success", "message": "Job post updated!", "job_posting": job_posting.serialize()}), 200
+    return jsonify({"title":"Completed", "status": "success", "message": "Job post updated!", "job_posting": job_posting.serialize()}), 200
 
 
 @bp_job_posting.route('/job_postings/<int:id>', methods=['DELETE'])
