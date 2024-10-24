@@ -133,6 +133,25 @@ def update_job_posting(id):
     if job_posting.user_id != user_id:
         return jsonify({"status": "error", "message": "You are not allowed to update this job posting"}), 403
 
+    
+    languages = request.json.get('languages')
+    technologies = request.json.get('technologies')
+
+    print(languages)
+    print(technologies)
+
+    tech = []
+    lang = []
+
+    for l in languages:
+        lang1 = Language.query.filter_by(name = l).first()
+        lang.append(lang1)
+
+
+    for t in technologies:
+        tech1 = Technology.query.filter_by(name = t).first()
+        tech.append(tech1)
+
 
     job_posting.title = request.json.get('title', job_posting.title)
     job_posting.description = request.json.get('description', job_posting.description)
@@ -140,10 +159,25 @@ def update_job_posting(id):
     job_posting.required_time = request.json.get('required_time', job_posting.required_time)
     job_posting.expiration_date = request.json.get('expiration_date', job_posting.expiration_date)
     job_posting.status_id = request.json.get('status_id', job_posting.status_id)
+    
+    
+    if len(lang) > 0 : 
+        print(lang)
+        job_posting.languages = lang
+    else :
+        
+        job_posting.languages = job_posting.languages
+
+    if len(tech) > 0 :
+        print(tech) 
+        job_posting.technologies = tech
+    else :
+      
+        job_posting.technologies = job_posting.technologies
 
     job_posting.update()
 
-    return jsonify({"status": "success", "message": "Job posting updated!", "job_posting": job_posting.serialize()}), 200
+    return jsonify({"status": "success", "message": "Job post updated!", "job_posting": job_posting.serialize()}), 200
 
 
 @bp_job_posting.route('/job_postings/<int:id>', methods=['DELETE'])
