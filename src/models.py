@@ -286,6 +286,7 @@ class Application(db.Model):
             "id": self.id,
             "user": self.user_id,
             "status": self.status.name,
+            'status_id': self.status_id,
             "date": self.date,
             "job_posting": {
                 "id": self.job_posting.id,
