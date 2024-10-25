@@ -20,6 +20,7 @@ rankingJobPosting = db.Table(
     db.Column("user_id", db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True),
     db.Column("ranking_id", db.Integer, db.ForeignKey('ranking.id'), nullable=False),
     db.Column("job_posting_id", db.Integer, db.ForeignKey('job_postings.id'), nullable=False, primary_key=True)
+   
 )
 
 rankingApplications = db.Table(
@@ -51,9 +52,7 @@ class User(db.Model):
             "email": self.email,
             "is_active": self.is_active,
             "profile": self.profile.serialize() if self.profile else None,
-            "job_postings": [{"id": job.id, "title": job.title} for job in self.job_postings],
-            "applicant_ratings": [{"rating": rating.ranking_id, "applications_id": rating.application_id} for rating in self.applicant_ratings] ,
-            "employer_ratings": [{"rating": rating.ranking_id, "job_postings_id": rating.job_postings_id} for rating in self.employer_ratings] 
+            "job_postings": [{"id": job.id, "title": job.title} for job in self.job_postings]
         }
 
     def save(self):
@@ -83,8 +82,8 @@ class Profile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     file_id = db.Column(db.String, default="")
 
-    """ applicant_ratings = db.relationship('Ranking', secondary=rankingApplications) 
-    employer_ratings =  db.relationship('Ranking', secondary=rankingJobPosting) """
+    applicant_ratings = db.relationship('Ranking', secondary=rankingApplications, primaryjoin = "Profile.user_id==rankingApplications.c.user_id", secondaryjoin ="Ranking.id==rankingApplications.c.ranking_id") 
+    employer_ratings =  db.relationship('Ranking', secondary=rankingJobPosting, primaryjoin = "Profile.user_id==rankingJobPosting.c.user_id", secondaryjoin ="Ranking.id==rankingJobPosting.c.ranking_id")
 
     def serialize(self):
         return {
@@ -96,7 +95,8 @@ class Profile(db.Model):
             "phone" :self.phone,
             "country" :self.country,
             "resume" :self.resume,
-           
+            "applicant_ratings": [{"rating": rating.ranking_id, "applications_id": rating.application_id} for rating in self.applicant_ratings] ,
+            "employer_ratings": [{"rating": rating.ranking_id, "job_postings_id": rating.job_postings_id} for rating in self.employer_ratings] 
         }
 
     def save(self):
