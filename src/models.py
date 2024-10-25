@@ -37,11 +37,12 @@ class User(db.Model):
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     is_active = db.Column(db.Boolean, default=True)
-    
-    
+      
     profile = db.relationship('Profile', backref="user", uselist=False)
     job_postings = db.relationship('JobPosting', backref="user", lazy=True)
     applications = db.relationship('Application', backref="user", lazy=True)
+    applicant_ratings = db.relationship('Ranking', secondary=rankingApplications) 
+    employer_ratings =  db.relationship('Ranking', secondary=rankingJobPosting)
 
     def serialize(self):
         return {
@@ -50,7 +51,9 @@ class User(db.Model):
             "email": self.email,
             "is_active": self.is_active,
             "profile": self.profile.serialize() if self.profile else None,
-            "job_postings": [{"id": job.id, "title": job.title} for job in self.job_postings]
+            "job_postings": [{"id": job.id, "title": job.title} for job in self.job_postings],
+            "applicant_ratings": [{"rating": rating.ranking_id, "applications_id": rating.application_id} for rating in self.applicant_ratings] ,
+            "employer_ratings": [{"rating": rating.ranking_id, "job_postings_id": rating.job_postings_id} for rating in self.employer_ratings] 
         }
 
     def save(self):
@@ -80,7 +83,8 @@ class Profile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     file_id = db.Column(db.String, default="")
 
-
+    """ applicant_ratings = db.relationship('Ranking', secondary=rankingApplications) 
+    employer_ratings =  db.relationship('Ranking', secondary=rankingJobPosting) """
 
     def serialize(self):
         return {
@@ -91,7 +95,8 @@ class Profile(db.Model):
             "avatar": self.avatar,
             "phone" :self.phone,
             "country" :self.country,
-            "resume" :self.resume
+            "resume" :self.resume,
+           
         }
 
     def save(self):
@@ -162,13 +167,13 @@ class JobPosting(db.Model):
 class Ranking(db.Model):
     __tablename__ = 'ranking'
     id =  db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-
+    rating = db.Column(db.Integer, nullable=False) # calificacion 1 a 5 estrellas
+    
 
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name
+            "rating": self.rating,
         }
     
     def save(self):
