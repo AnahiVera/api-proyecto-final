@@ -143,14 +143,24 @@ def update_job_posting(id):
     tech = []
     lang = []
 
-    for l in languages:
-        lang1 = Language.query.filter_by(name = l).first()
-        lang.append(lang1)
+    if len(lang) > 0 : 
+        print(lang)
+        for l in languages:
+            lang1 = Language.query.filter_by(name = l).first()
+            lang.append(lang1)
+        job_posting.languages = lang
+    else :
+        job_posting.languages = job_posting.languages
 
+    if len(tech) > 0 :
+        print(tech) 
+        for t in technologies:
+            tech1 = Technology.query.filter_by(name = t).first()
+            tech.append(tech1)
+        job_posting.technologies = tech
+    else :
+        job_posting.technologies = job_posting.technologies
 
-    for t in technologies:
-        tech1 = Technology.query.filter_by(name = t).first()
-        tech.append(tech1)
 
 
     job_posting.title = request.json.get('title', job_posting.title)
@@ -161,17 +171,6 @@ def update_job_posting(id):
     job_posting.status_id = request.json.get('status_id', job_posting.status_id)
     
     
-    if len(lang) > 0 : 
-        print(lang)
-        job_posting.languages = lang
-    else :
-        job_posting.languages = job_posting.languages
-
-    if len(tech) > 0 :
-        print(tech) 
-        job_posting.technologies = tech
-    else :
-        job_posting.technologies = job_posting.technologies
 
     job_posting.update()
 
