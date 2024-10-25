@@ -1,12 +1,32 @@
 from app import app
-from models import Rank, Technology, Language, Status
+from models import Rank, Technology, Language, Status, Ranking
 
 
 with app.app_context():
+    rating1 = Ranking()
+    rating1.rating=1
+    rating1.save()
+
+    rating2 = Ranking()
+    rating2.rating=2
+    rating2.save()
+
+    rating3 = Ranking()
+    rating3.rating=3
+    rating3.save()
+
+    rating4 = Ranking()
+    rating4.rating=4
+    rating4.save()
+
+    rating5 = Ranking()
+    rating5.rating=5
+    rating5.save()
+"""    
     status7 = Status()
     status7.name='Private'
     status7.save()
-"""    
+
     status4 = Status()
     status4.name='Pending'
     status4.save()
