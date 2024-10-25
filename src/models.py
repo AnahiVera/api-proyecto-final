@@ -82,8 +82,7 @@ class Profile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     file_id = db.Column(db.String, default="")
 
-    applicant_ratings = db.relationship('Ranking', secondary=rankingApplications, primaryjoin = "Profile.user_id==rankingApplications.c.user_id", secondaryjoin ="Ranking.id==rankingApplications.c.ranking_id") 
-    employer_ratings =  db.relationship('Ranking', secondary=rankingJobPosting, primaryjoin = "Profile.user_id==rankingJobPosting.c.user_id", secondaryjoin ="Ranking.id==rankingJobPosting.c.ranking_id")
+   
 
     def serialize(self):
         return {
@@ -95,8 +94,8 @@ class Profile(db.Model):
             "phone" :self.phone,
             "country" :self.country,
             "resume" :self.resume,
-            "applicant_ratings": [{"rating": rating.ranking_id, "applications_id": rating.application_id} for rating in self.applicant_ratings] ,
-            "employer_ratings": [{"rating": rating.ranking_id, "job_postings_id": rating.job_postings_id} for rating in self.employer_ratings] 
+            "applicant_ratings": [rate.rating for rate in self.user.applicant_ratings], 
+            "employer_ratings": [rate.rating for rate in self.user.employer_ratings] 
         }
 
     def save(self):
