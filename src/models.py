@@ -123,6 +123,7 @@ class JobPosting(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     rank_id = db.Column(db.Integer, db.ForeignKey('ranks.id'), nullable=False)
     status_id = db.Column(db.Integer, db.ForeignKey('status.id'), default= 1,  nullable=False)
+    rated = db.Column(db.Boolean, default=False)
 
 
     applications = db.relationship('Application', backref='job_posting', lazy=True)
@@ -147,7 +148,8 @@ class JobPosting(db.Model):
             "technologies": [tech.name for tech in self.technologies], 
             "applications": [application.user.username for application in self.applications],
             "status": self.status.name,
-            'status_id': self.status_id
+            'status_id': self.status_id,
+            "rated": self.rated
         }
 
 
@@ -282,6 +284,7 @@ class Application(db.Model):
     job_posting_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
     status_id = db.Column(db.Integer, db.ForeignKey('status.id'), default=4, nullable=False)
     date = db.Column(db.DateTime, default=datetime.now)
+    rated = db.Column(db.Boolean, default=False)
 
     status = db.relationship('Status', backref='applications')
     
@@ -299,7 +302,9 @@ class Application(db.Model):
                 "status": self.job_posting.status.name,
                 "payment": self.job_posting.payment,
                 "employer": self.job_posting.user_id
-          }
+          },
+            "rated": self.rated
+    
         }
 
     def save(self):
