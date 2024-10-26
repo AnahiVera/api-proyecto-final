@@ -1,7 +1,7 @@
 import cloudinary.uploader
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, Profile, rankingApplications
+from models import User, Profile, Ranking, Application, rankingApplications, db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 bp_profile = Blueprint('bp_profile', __name__)
@@ -106,11 +106,13 @@ def rank_application():
     
     data = request.get_json()
 
+    print(data)
+
     user_id = data.get("user_id")
     ranking_id = data.get("ranking_id")
     application_id = data.get("application_id")
 
-    application = Application.query.get(application_id = application_id)
+    application = Application.query.filter_by(id=application_id).first()
 
     if not user_id or not ranking_id or not application_id:
         return jsonify({"error": "Faltan campos requeridos"}), 400
@@ -123,8 +125,12 @@ def rank_application():
     ranking = Ranking.query.get(ranking_id)
     if not ranking:
         return jsonify({"error": "Ranking no encontrado"}), 404
+    
+    insert_stmt = rankingApplications.insert().values(ranking_id=ranking_id, user_id=user_id, application_id=application_id)
+    db.session.execute(insert_stmt)
+    db.session.commit()
 
-    user.applicant_ratings.append({ranking, application})
+    application.rated=True
+    application.update()
 
-    user.update()
     return jsonify({"message":"Ranking de Application created successfully"}), 201
