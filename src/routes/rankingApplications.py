@@ -1,5 +1,5 @@
-""" from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import Blueprint, request, jsonify
+""" from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import rankingApplications, User, Application
 
 bp_rankingApplications = Blueprint('bp_rankingApplications', __name__)

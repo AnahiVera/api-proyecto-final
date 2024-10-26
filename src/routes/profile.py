@@ -1,7 +1,7 @@
 import cloudinary.uploader
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, Profile
+from models import User, Profile, rankingApplications
 from werkzeug.security import generate_password_hash, check_password_hash
 
 bp_profile = Blueprint('bp_profile', __name__)
@@ -82,8 +82,6 @@ def update_profile():
 
 
 
-
-
 @bp_profile.route('/profile', methods=['DELETE'])
 @jwt_required()
 def delete_profile():
@@ -100,3 +98,33 @@ def delete_profile():
     user.profile.delete()
 
     return jsonify({"status": "success", "message": "Profile deleted!"}), 200
+
+
+@bp_profile.route('/profile/rank_app', methods=['POST'])
+@jwt_required()
+def rank_application():
+    
+    data = request.get_json()
+
+    user_id = data.get("user_id")
+    ranking_id = data.get("ranking_id")
+    application_id = data.get("application_id")
+
+    application = Application.query.get(application_id = application_id)
+
+    if not user_id or not ranking_id or not application_id:
+        return jsonify({"error": "Faltan campos requeridos"}), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+
+    ranking = Ranking.query.get(ranking_id)
+    if not ranking:
+        return jsonify({"error": "Ranking no encontrado"}), 404
+
+    user.applicant_ratings.append({ranking, application})
+
+    user.update()
+    return jsonify({"message":"Ranking de Application created successfully"}), 201
