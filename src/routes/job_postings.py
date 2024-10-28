@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, JobPosting, Language, Technology, Rank, post_languages, tech_knowledges
+from models import User, JobPosting, Language, Technology, Rank, Application, post_languages, tech_knowledges
 from datetime import datetime
 from sqlalchemy import and_
 
@@ -195,3 +195,38 @@ def delete_job_posting(id):
     job_posting.delete()
 
     return jsonify({"status": "success", "message": "Job posting deleted!"}), 200
+
+@bp_job_posting.route('/job_postings/complete/<int:id>', methods=['PATCH'])
+@jwt_required()
+def complete_job_posting(id):
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    job_posting = JobPosting.query.get(id)
+    application = Application.query.filter_by(status_id=6).first()
+
+    if not job_posting:
+        return jsonify({"status": "error", "message": "Job posting not found"}), 404
+    
+    if not application:
+        return jsonify({"status": "error", "message": "Make sure you have accepted an applicant first"}), 404
+    
+    if job_posting.user_id != user_id:
+        return jsonify({"status": "error", "message": "You are not allowed to complete this job posting"}), 403
+    
+    if job_posting.status_id == 2:
+        return jsonify({"status": "error", "message": "Job posting already completed"}), 403
+    
+    if job_posting.status_id != 3:
+        return jsonify({"status": "error", "message": "Job posting must be accepted first"}), 403
+
+    if job_posting.status_id == 3:
+        job_posting.status_id = 2
+
+    if application.status_id == 6:
+        application.status_id = 2
+
+    job_posting.update()
+    application.update()
+
+    return jsonify({"status": "success", "message": "Job posting completed!"}), 200
