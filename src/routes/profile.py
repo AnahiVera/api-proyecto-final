@@ -1,7 +1,7 @@
 import cloudinary.uploader
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, Profile, Ranking, Application, rankingApplications, db
+from models import User, Profile, Ranking, Application, JobPosting, rankingApplications, rankingJobPosting, db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 bp_profile = Blueprint('bp_profile', __name__)
@@ -134,3 +134,37 @@ def rank_application():
     application.update()
 
     return jsonify({'status':'success','title':'Applicant Rated',"message":"Ranking de Application created successfully"}), 201
+
+@bp_profile.route('/profile/rank_job', methods=['POST'])
+@jwt_required()
+def rank_job():
+    
+    data = request.get_json()
+
+    print(data)
+
+    user_id = data.get("user_id")
+    ranking_id = data.get("ranking_id")
+    job_id = data.get("job_posting_id")
+
+    job = JobPosting.query.filter_by(id=job_id).first()
+
+    if not user_id or not ranking_id or not job_id:
+        return jsonify({"error": "Faltan campos requeridos"}), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+
+    ranking = Ranking.query.get(ranking_id)
+    if not ranking:
+        return jsonify({"error": "Ranking no encontrado"}), 404
+    
+    rate_job = rankingJobPosting.insert().values(ranking_id=ranking_id, user_id=user_id, job_posting_id=job_id)
+    db.session.execute(rate_job)
+    db.session.commit()
+
+    job.rated=True
+    job.update()
+    return jsonify({'status':'success','title':'Completed',"message":"Job rated successfully"}), 201
