@@ -3,6 +3,7 @@ from models import Rank, Technology, Language, Status, Ranking
 
 
 with app.app_context():
+
     rating1 = Ranking()
     rating1.rating=1
     rating1.save()
@@ -22,22 +23,8 @@ with app.app_context():
     rating5 = Ranking()
     rating5.rating=5
     rating5.save()
-"""    
-    status7 = Status()
-    status7.name='Private'
-    status7.save()
 
-    status4 = Status()
-    status4.name='Pending'
-    status4.save()
 
-    status5 = Status()
-    status5.name='Rejected'
-    status5.save()
-    
-    status6 = Status()
-    status6.name='Accepted'
-    status6.save()
 
     lang1 = Language()
     lang1.name='Spanish'
@@ -50,6 +37,7 @@ with app.app_context():
     lang3 = Language()
     lang3.name='English'
     lang3.save()
+
 
 
     rank1 = Rank()
@@ -65,6 +53,7 @@ with app.app_context():
     rank3.save()
     
 
+
     status1 = Status()
     status1.name='Public'
     status1.save()
@@ -76,6 +65,28 @@ with app.app_context():
     status3 = Status()
     status3.name='In process'
     status3.save()
+
+    status4 = Status()
+    status4.name='Pending'
+    status4.save()
+
+    status5 = Status()
+    status5.name='Rejected'
+    status5.save()
+    
+    status6 = Status()
+    status6.name='Accepted'
+    status6.save()
+   
+    status7 = Status()
+    status7.name='Private'
+    status7.save()
+
+    status8 = Status()
+    status8.name='Deleted'
+    status8.save()
+
+
 
     technologies1 = Technology()
     technologies1.name='Java'
@@ -112,4 +123,4 @@ with app.app_context():
     technologies9 = Technology()
     technologies9.name='NodeJS'
     technologies9.save()
- """
+ 
