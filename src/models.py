@@ -134,6 +134,8 @@ class JobPosting(db.Model):
     rank = db.relationship('Rank', lazy=True)
     
     def serialize(self):
+        filtered_applications = next((application.serialize() for application in self.applications if application.status_id in [2,6]),None)
+
         return {
             "id": self.id,
             "title": self.title,
@@ -149,8 +151,15 @@ class JobPosting(db.Model):
             "applications": [application.user.username for application in self.applications],
             "status": self.status.name,
             'status_id': self.status_id,
-            "rated": self.rated
+            "rated": self.rated,
+            'applicant' : {
+                'application_id': filtered_applications['id'] if filtered_applications else None,
+                'user_id': filtered_applications['user'] if filtered_applications else None,
+                'status_id': filtered_applications['status_id'] if filtered_applications else None,
+                'rated': filtered_applications['rated'] if filtered_applications else None
+                } if filtered_applications else None
         }
+        
 
 
     def save(self):
@@ -301,7 +310,8 @@ class Application(db.Model):
                 "title": self.job_posting.title,
                 "status": self.job_posting.status.name,
                 "payment": self.job_posting.payment,
-                "employer": self.job_posting.user_id
+                "employer": self.job_posting.user_id,
+                'rated': self.job_posting.rated
           },
             "rated": self.rated
     

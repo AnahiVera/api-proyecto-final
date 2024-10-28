@@ -99,6 +99,7 @@ def accept_application(id):
     user_id = get_jwt_identity()
     application = Application.query.get_or_404(id)
     rejected_applications = Application.query.filter(and_(Application.job_posting_id==application.job_posting_id, Application.id!=id))
+    job_posting = JobPosting.query.get(application.job_posting_id)
     
     # Solo el empleador de la publicación puede actualizar el estado
     if application.job_posting.user_id != user_id:
@@ -113,10 +114,11 @@ def accept_application(id):
         apply.update()
     
     application.status_id = 6
-    application.update()
+    job_posting.status_id = 3
 
     serialized_rejected = [apply.serialize() for apply in rejected_applications]
 
+    job_posting.update()
     application.update()
     return jsonify({'title': 'Completed', "status": "success",'message': 'The applicant has been accepted, all the rest have been rejected', "application": application.serialize(), "rejected_applications" : serialized_rejected}), 200
 

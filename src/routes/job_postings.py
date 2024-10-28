@@ -200,25 +200,24 @@ def delete_job_posting(id):
 @jwt_required()
 def complete_job_posting(id):
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
 
     job_posting = JobPosting.query.get(id)
     application = Application.query.filter_by(status_id=6).first()
 
     if not job_posting:
-        return jsonify({"status": "error", "message": "Job posting not found"}), 404
+        return jsonify({'title': 'Error',"status": "error", "message": "Job posting not found"}), 404
     
     if not application:
-        return jsonify({"status": "error", "message": "Make sure you have accepted an applicant first"}), 404
+        return jsonify({'title': 'Error',"status": "error", "message": "Make sure you have accepted an applicant first"}), 404
     
     if job_posting.user_id != user_id:
-        return jsonify({"status": "error", "message": "You are not allowed to complete this job posting"}), 403
+        return jsonify({'title': 'Error',"status": "error", "message": "You are not allowed to complete this job posting"}), 403
     
     if job_posting.status_id == 2:
-        return jsonify({"status": "error", "message": "Job posting already completed"}), 403
+        return jsonify({'title': 'Error',"status": "error", "message": "Job posting already completed"}), 403
     
     if job_posting.status_id != 3:
-        return jsonify({"status": "error", "message": "Job posting must be accepted first"}), 403
+        return jsonify({'title': 'Error',"status": "error", "message": "Job posting must be accepted first"}), 403
 
     if job_posting.status_id == 3:
         job_posting.status_id = 2
@@ -229,4 +228,4 @@ def complete_job_posting(id):
     job_posting.update()
     application.update()
 
-    return jsonify({"status": "success", "message": "Job posting completed!"}), 200
+    return jsonify({"status": "success",'title': 'Completed', "message": "Job posting completed!"}), 200

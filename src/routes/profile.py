@@ -133,4 +133,4 @@ def rank_application():
     application.rated=True
     application.update()
 
-    return jsonify({"message":"Ranking de Application created successfully"}), 201
+    return jsonify({'status':'success','title':'Applicant Rated',"message":"Ranking de Application created successfully"}), 201
