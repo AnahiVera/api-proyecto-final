@@ -143,21 +143,23 @@ def update_job_posting(id):
     tech = []
     lang = []
 
-    if len(languages) > 0 : 
-        for l in languages:
-            lang1 = Language.query.filter_by(name = l).first()
-            lang.append(lang1)
-        job_posting.languages = lang
-    else :
-        job_posting.languages = job_posting.languages
+    if languages:
+        if len(languages) > 0 : 
+            for l in languages:
+                lang1 = Language.query.filter_by(name = l).first()
+                lang.append(lang1)
+            job_posting.languages = lang
+        else :
+            job_posting.languages = job_posting.languages
 
-    if len(technologies) > 0 : 
-        for t in technologies:
-            tech1 = Technology.query.filter_by(name = t).first()
-            tech.append(tech1)
-        job_posting.technologies = tech
-    else :
-        job_posting.technologies = job_posting.technologies
+    if technologies:       
+        if len(technologies) > 0 : 
+            for t in technologies:
+                tech1 = Technology.query.filter_by(name = t).first()
+                tech.append(tech1)
+            job_posting.technologies = tech
+        else :
+            job_posting.technologies = job_posting.technologies
 
 
 
